@@ -23,6 +23,6 @@ class Index
 
     public function add()
     {
-        echo '123';
+        echo phpinfo();
     }
 }
