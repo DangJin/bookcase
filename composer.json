@@ -23,7 +23,14 @@
         "topthink/think-image": "1.*",
         "topthink/think-queue": "1.*",
         "topthink/think-migration": "1.*",
-        "topthink/think-oracle": "1.*"
+        "topthink/think-oracle": "1.*",
+        "overtrue/wechat": "^4.0",
+        "firebase/php-jwt": "^5.0",
+        "maennchen/zipstream-php": "^0.5.1",
+        "Vaptcha/vaptcha-sdk": "^1.1",
+        "endroid/qr-code": "^2.5",
+        "overtrue/easy-sms": "^1.0",
+        "swiftmailer/swiftmailer": "^6.0"
     },
     "autoload": {
         "psr-4": {
