@@ -1,5 +1,5 @@
 <?php
-namespace app\wexpay\controller;
+namespace app\wxpay\controller;
 
 class Index
 {
