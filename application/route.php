@@ -9,6 +9,7 @@
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
 
+
 \think\Route::group( 'admin', [
 	'user' => [ 'admin/user/add', [ 'method' => 'post' ] ],
 ] );

@@ -14,6 +14,8 @@ use think\Request;
 
 class Common extends Controller
 {
+    protected $model = '';
+
     public function __construct(Request $request = null)
     {
         header('Access-Control-Allow-Origin: *');
@@ -21,5 +23,31 @@ class Common extends Controller
         header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
         header("Access-Control-Allow-Headers: Origin, X-Requested-With, access-token, refresh-token, Content-Type, Accept, csrf, authKey, sessionId");
         header('Content-Type:text/html; charset=utf-8');
+    }
+
+    public function select(Request $request)
+    {
+        return $this->model->select($request->param());
+    }
+
+    public function add(Request $request)
+    {
+        if ($request->isPost()) {
+            if (!$request->has('csrf', 'header', true) || $request->header('csrf') != session('csrf')) {
+                return returnJson(600, 400, '表单token验证失败');
+            }
+            session('csrf', md5($_SERVER['REQUEST_TIME_FLOAT']));
+            return $this->model->add($request->param());
+        }
+    }
+
+    public function update(Request $request)
+    {
+        return $this->model->renew($request->param());
+    }
+
+    public function delete(Request $request)
+    {
+        return $this->model->del($request->param());
     }
 }
