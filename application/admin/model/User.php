@@ -11,8 +11,14 @@ namespace app\admin\model;
 
 class User extends Common
 {
+    protected $addallow = ['type', 'phone', 'name', 'gender', 'state', 'sort'];
+
+    protected $upallow = ['phone', 'name', 'gender', 'state', 'sort'];
+
     protected $manyToMany = [
-        'wishs' => 'wish,create_user',
+        'book'       => 'wish,create_user', #心愿单
+        'books'      => 'borrow,create_user', #借阅
+        'memcards'   => 'use_mem,uid', #会员卡
     ];
 
     protected $oneToMany = [
@@ -23,11 +29,24 @@ class User extends Common
         'comment'       => 'create_user',
     ];
 
-    protected $parent;
+    protected $parent = ["wish" => 'type'];
 
-    public function wishs()
+    public function book()
     {
-        return $this->belongsToMany('Book', 'wish', 'bid', 'create_user');
+        $tmparr = explode(',', $this->manyToMany['book']);
+        return $this->belongsToMany('Book',$tmparr[0], 'bid', $tmparr[1]);
+    }
+
+    public function books()
+    {
+        $tmparr = explode(',', $this->manyToMany['books']);
+        return $this->belongsToMany('Books',$tmparr[0], 'bid', $tmparr[1]);
+    }
+
+    public function memcards()
+    {
+        $tmparr = explode(',', $this->manyToMany['memcards']);
+        return $this->belongsToMany('Memcard',$tmparr[0], 'mid', $tmparr[1]);
     }
 
 }

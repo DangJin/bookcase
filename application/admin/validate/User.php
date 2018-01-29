@@ -9,7 +9,21 @@
 namespace app\admin\validate;
 
 
-class User
-{
+use think\Validate;
 
+class User extends Validate
+{
+    protected $rule = [
+        'type' => 'require',
+        'phone' => 'require|unique:user,isdel=0&phone=:phone',
+    ];
+
+    protected $message = [
+        'type.require'  =>  '用户类型不能为空',
+        'phone.require'  =>  '手机号码不能为空',
+    ];
+
+    protected $scene = [
+        'update' => ['phone'],
+    ];
 }

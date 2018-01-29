@@ -31,11 +31,15 @@ class Common extends Model
     //多对多
     protected $manyToMany = '';
 
-    //[表中字段 => 对应表名]
-    protected $parent = '';
+    //[对应表名 => 表中字段]
+    protected $parent = [];
 
-    //[对应表中字段 => 对应表名]
+    //[对应表名 => 对应表中字段]
     protected $oneToMany = '';
+
+    protected $addallow = true;
+
+    protected $upallow = true;
 
     /**
      * Function: select
@@ -51,7 +55,11 @@ class Common extends Model
         //多条件查询
         $map = [];
         if (isset($data['search']) && !empty($data['search'])) {
-            $condi = ['like', '%'.$data['search'].'%'];
+            if (preg_match('/^[0-9]$/', $data['search'])) {
+                $condi = (int)$data['search'];
+            } else {
+                $condi = ['like', '%'.$data['search'].'%'];
+            }
             if (isset($data['searchForField']) && !empty($data['searchForField'])) {
                 $tmp = explode(',', $data['searchForField']);
                 $tmp = array_unique($tmp);
@@ -59,7 +67,7 @@ class Common extends Model
                 foreach ($tmp as $item) {
                     $map[$item] = $condi;
                 }
-                $this->where(function ($query) use ($map) {
+                $result->where(function ($query) use ($map) {
                     $query->whereOr($map);
                 });
             }
@@ -95,6 +103,7 @@ class Common extends Model
 
         $result = $result->where('isdel', '<>', 1);
 
+
         try {
             //查询全部数据
             if (isset($data['all']) && $data['all'] == 1) {
@@ -107,11 +116,14 @@ class Common extends Model
                 $result = $result->paginate($limit, false, ['page' => $page]);
             }
             $result = $result->toArray();
-            foreach ($result['data'] as &$item) {
-                foreach ($this->parent as $k => $v) {
-                    $item[$k] = $this->table($v)->where('id', $item[$k])->where('isdel', '<>', 1)->find();
+            if (isset($data['hasParent']) && $data['hasParent'] == 1) {
+                foreach ($result['data'] as &$item) {
+                    foreach ($this->parent as $k => $v) {
+                        $item[$v] = $this->table($k)->where('id', $item[$v])->where('isdel', '<>', 1)->find();
+                    }
                 }
             }
+
             return returnJson(701, 200, $result);
         } catch (Exception $e) {
             return returnJson(601,400, $e->getMessage());
@@ -124,10 +136,13 @@ class Common extends Model
             return returnJson(602, 400, '添加参数不能为空');
         }
 
+//        $data['create_user'] = session('sId');
+//        $data['modify_user'] = session('sId');
+
         $this->startTrans();
         try {
             //添加主表
-            $result = $this->validate(true)->allowField(true)->save($data);
+            $result = $this->validate(true)->allowField($this->addallow)->save($data);
             if ($result == false)
                 return returnJson(603, 400, $this->getError());
             //添加关联中间表
@@ -142,7 +157,6 @@ class Common extends Model
                 }
             }
             $this->commit();
-            return returnJson(702, 200, $this->toArray());
         } catch (\Exception $e) {
             $this->rollback();
             return returnJson(603, 400, $e->getMessage());
@@ -150,16 +164,20 @@ class Common extends Model
             $this->rollback();
             return returnJson(603, 400, $e->getMessage());
         }
+        return returnJson(702, 200, $this->toArray());
     }
 
     public function renew($data) {
         if (!isset($data['id']) && empty($data['id'])) {
             return returnJson(605, 400, '更新缺少主键参数');
         }
-
+        dump($data);
         $this->startTrans();
         try {
-            $this->allowField(true)->validate($this->name.'.update')->save($data);
+            $result = $this->allowField($this->upallow)->validate($this->name.'.update')->isUpdate(true)->save($data);
+            if (false == $result) {
+                return returnJson(606, 400, $this->getError());
+            }
             foreach (array_keys($data) as $item) {
                 if (in_array($item, array_keys($this->manyToMany))) {
                     $tmparr = explode(',', $this->manyToMany[$item]);
@@ -170,6 +188,8 @@ class Common extends Model
                     $this->$item()->savaAll($tmparr);
                 }
             }
+            $this->commit();
+            return returnJson(704, 200, '更新成功');
         } catch (Exception $e) {
             $this->rollback();
             return returnJson(606, 400, $e->getMessage());

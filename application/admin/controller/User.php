@@ -13,16 +13,11 @@ use think\Request;
 
 class User extends Common
 {
-    private $user;
+    protected $model;
 
     public function __construct(Request $request = null)
     {
         parent::__construct($request);
-        $this->user = new \app\admin\model\User();
-    }
-
-    public function select()
-    {
-        return $this->user->select([]);
+        $this->model = new \app\admin\model\User();
     }
 }
