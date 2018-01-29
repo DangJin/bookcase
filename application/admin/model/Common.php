@@ -19,10 +19,16 @@ class Common extends Model
 {
     protected $pk = 'id';
 
+    //创建时间
     protected $createTime = 'create_time';
 
+    //修改时间
     protected $updateTime = 'modify_time';
 
+    //自动填充
+    protected $insert = ['state' => 1, 'isdel' => 0];
+
+    //多对多
     protected $manyToMany = '';
 
     //[表中字段 => 对应表名]
@@ -106,7 +112,6 @@ class Common extends Model
                     $item[$k] = $this->table($v)->where('id', $item[$k])->where('isdel', '<>', 1)->find();
                 }
             }
-
             return returnJson(701, 200, $result);
         } catch (Exception $e) {
             return returnJson(601,400, $e->getMessage());
@@ -183,7 +188,7 @@ class Common extends Model
             $this->startTrans();
             try {
                 foreach ($this->oneToMany as $k => $v) {
-                    $this->table($v)->where($k, 'in', $data['ids'])->delete();
+                    $this->table($k)->where($v, 'in', $data['ids'])->delete();
                 }
                 foreach ($this->manyToMany as $item) {
                     $tmparr = explode(',', $item);
