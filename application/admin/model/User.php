@@ -18,18 +18,18 @@ class User extends Common
     protected $manyToMany = [
         'book'       => 'wish,create_user', #心愿单
         'books'      => 'borrow,create_user', #借阅
-        'memcards'   => 'use_mem,uid', #会员卡
+        'memcards'   => 'use_mem,create_user', #会员卡
     ];
 
     protected $oneToMany = [
         'order'         => 'uid',
         'repair'        => 'uid',
-        'credit_detail' => 'uid',
+        'creadit_detail' => 'uid',
         'sign'          => 'create_user',
         'comment'       => 'create_user',
     ];
 
-    protected $parent = ["wish" => 'type'];
+//    protected $parent = [];
 
     public function book()
     {
@@ -48,5 +48,4 @@ class User extends Common
         $tmparr = explode(',', $this->manyToMany['memcards']);
         return $this->belongsToMany('Memcard',$tmparr[0], 'mid', $tmparr[1]);
     }
-
 }

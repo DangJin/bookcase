@@ -11,5 +11,6 @@ namespace app\admin\model;
 
 class Order extends Common
 {
-
+    protected $addallow = ['uid', 'amount', 'type', 'number', 'sort', 'state', 'bid'];
+    protected $parent = ['user' => 'uid'];
 }

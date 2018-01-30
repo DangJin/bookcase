@@ -29,13 +29,13 @@ class Common extends Model
     protected $insert = ['state' => 1, 'isdel' => 0];
 
     //多对多
-    protected $manyToMany = '';
+    protected $manyToMany = [];
 
     //[对应表名 => 表中字段]
     protected $parent = [];
 
     //[对应表名 => 对应表中字段]
-    protected $oneToMany = '';
+    protected $oneToMany = [];
 
     protected $addallow = true;
 
@@ -142,7 +142,7 @@ class Common extends Model
         $this->startTrans();
         try {
             //添加主表
-            $result = $this->validate(true)->allowField($this->addallow)->save($data);
+            $result = $this->validate(true)->allowField($this->addallow)->validate(true)->save($data);
             if ($result == false)
                 return returnJson(603, 400, $this->getError());
             //添加关联中间表
@@ -171,11 +171,10 @@ class Common extends Model
         if (!isset($data['id']) && empty($data['id'])) {
             return returnJson(605, 400, '更新缺少主键参数');
         }
-        dump($data);
         $this->startTrans();
         try {
             $result = $this->allowField($this->upallow)->validate($this->name.'.update')->isUpdate(true)->save($data);
-            if (false == $result) {
+            if ($result === false) {
                 return returnJson(606, 400, $this->getError());
             }
             foreach (array_keys($data) as $item) {
@@ -189,12 +188,11 @@ class Common extends Model
                 }
             }
             $this->commit();
-            return returnJson(704, 200, '更新成功');
         } catch (Exception $e) {
             $this->rollback();
             return returnJson(606, 400, $e->getMessage());
         }
-
+        return returnJson(704, 200, '更新成功');
     }
 
     public function del($data, $softdel = true)

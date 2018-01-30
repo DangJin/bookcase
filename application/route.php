@@ -26,3 +26,7 @@
 	'wxconfig' => [ 'wechat/jsSdk/getWxConfig', [ 'method' => 'POST' ] ],
 	'oauth'    => [ 'wechat/oauth/oauth_callback', [ 'method' => 'GET' ] ],
 ] );
+
+\think\Route::group( 'admin', [
+
+] );
