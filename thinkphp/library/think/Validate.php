@@ -883,6 +883,11 @@ class Validate
             }
         } elseif (strpos($key, '=')) {
             parse_str($key, $map);
+            foreach ($map as $k => $v) {
+                if (stripos($v, ':') === 0) {
+                    $map[$k] = $data[$k];
+                }
+            }
         } else {
             $map[$key] = $data[$field];
         }
