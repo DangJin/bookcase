@@ -9,48 +9,76 @@
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
 
-\think\Route::group( 'index', [
-	'wallet' => [ 'index/wallet/index', [ 'method' => 'get' ] ],
-] );
+\think\Route::group(
+    'index', [
+        'wallet'                 => ['index/wallet/index', ['method' => 'get']],
+        'bookcase/list'          => ['index/bookCase/getBookcaseList',
+                                     ['method' => 'get']],
+        'bookcase/drawers'       => ['index/bookCase/drawers',
+                                     ['method' => 'get']],
+        'persCenter/myBorrow'    => ['index/persCenter/myBorrow',
+                                     ['method' => 'POST']],
+        'persCenter/myWish'      => ['index/persCenter/myWish',
+                                     ['method' => 'POST']],
+        'persCenter/myBalance'   => ['index/persCenter/myBalance',
+                                     ['method' => 'GET']],
+        'persCenter/userProfile' => ['index/persCenter/userProfile',
+                                     ['method' => 'GET']],
+    ]
+);
 
-\think\Route::group( 'util', [
-	'sendCode'          => [ 'util/alidayu/sendCode', [ 'method' => 'post' ] ],
-	'status/getAlidayu' => [
-		'util/globalStatus/getAlidayu',
-		[ 'method' => 'GET' ],
-	],
-] );
+\think\Route::group(
+    'util', [
+        'sendCode'          => ['util/alidayu/sendCode', ['method' => 'post']],
+        'status/getAlidayu' => [
+            'util/globalStatus/getAlidayu',
+            ['method' => 'GET'],
+        ],
+    ]
+);
 
-\think\Route::group( 'weixin', [
-	'init'     => [ 'wechat/index/index', [ 'method' => 'GET' ] ],
-	'wxconfig' => [ 'wechat/jsSdk/getWxConfig', [ 'method' => 'POST' ] ],
-	'oauth'    => [ 'wechat/oauth/oauth_callback', [ 'method' => 'GET' ] ],
-] );
 
-\think\Route::group( 'admin', [
+\think\Route::group(
+    'weixin', [
+        'init'     => ['wechat/index/index', ['method' => 'GET']],
+        'wxconfig' => ['wechat/jsSdk/getWxConfig', ['method' => 'POST']],
+        'oauth'    => ['wechat/oauth/oauth_callback', ['method' => 'GET']],
+    ]
+);
+
+\think\Route::group(
+    'wxpay', [
+        'init' => ['wxpay/index/index', ['method' => 'GET']],
+    ]
+);
+
+\think\Route::group(
+    'admin', [
 
     //用户管理
-    'user/select' => ['admin/user/select', ['method' => 'GET']],
-    'user/update' => ['admin/user/update', ['method' => 'POST']],
-    'user/delete' => ['admin/user/delete', ['method' => 'POST']],
-    'user/add' => ['admin/user/add', ['method' => 'POST']],
+    'user/select'   => ['admin/user/select', ['method' => 'GET']],
+    'user/update'   => ['admin/user/update', ['method' => 'POST']],
+    'user/delete'   => ['admin/user/delete', ['method' => 'POST']],
+    'user/add'      => ['admin/user/add', ['method' => 'POST']],
 
     //报修类型管理
-    'rtype/select' => ['admin/rtype/select', ['method' => 'GET']],
-    'rtype/update' => ['admin/rtype/update', ['method' => 'POST']],
-    'rtype/delete' => ['admin/rtype/delete', ['method' => 'POST']],
-    'rtype/add' => ['admin/rtype/add', ['method' => 'POST']],
+    'rtype/select'  => ['admin/rtype/select', ['method' => 'GET']],
+    'rtype/update'  => ['admin/rtype/update', ['method' => 'POST']],
+    'rtype/delete'  => ['admin/rtype/delete', ['method' => 'POST']],
+    'rtype/add'     => ['admin/rtype/add', ['method' => 'POST']],
 
     //订单管理
-    'order/select' => ['admin/order/select', ['method' => 'GET']],
-    'order/update' => ['admin/order/update', ['method' => 'POST']],
-    'order/delete' => ['admin/order/delete', ['method' => 'POST']],
-    'order/add' => ['admin/order/add', ['method' => 'POST']],
+    'order/select'  => ['admin/order/select', ['method' => 'GET']],
+    'order/update'  => ['admin/order/update', ['method' => 'POST']],
+    'order/delete'  => ['admin/order/delete', ['method' => 'POST']],
+    'order/add'     => ['admin/order/add', ['method' => 'POST']],
 
     //订单管理
     'credet/select' => ['admin/creDet/select', ['method' => 'GET']],
-//    'credet/update' => ['admin/creDet/update', ['method' => 'POST']],
-//    'credet/delete' => ['admin/creDet/delete', ['method' => 'POST']],
-//    'credet/add' => ['admin/creDet/add', ['method' => 'POST']],
+    //    'credet/update' => ['admin/creDet/update', ['method' => 'POST']],
+    //    'credet/delete' => ['admin/creDet/delete', ['method' => 'POST']],
+    //    'credet/add' => ['admin/creDet/add', ['method' => 'POST']],
 
-] );
+]
+);
+
