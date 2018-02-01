@@ -11,5 +11,5 @@ namespace app\admin\model;
 
 class CreaditDetail extends Common
 {
-
+    protected $parent = ['user' => 'uid|name,id'];
 }

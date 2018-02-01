@@ -27,16 +27,19 @@ class Common extends Controller
 
     public function select(Request $request)
     {
-        return $this->model->select($request->param());
+        $page = $request->has('page', 'param', true) ? $request->param('page') : 1;
+        $limit = $request->has('limit', 'param', true) ? $request->param('limit') : 10;
+        return $this->model->select($request->param(), $page, $limit);
     }
+
 
     public function add(Request $request)
     {
         if ($request->isPost()) {
-            if (!$request->has('csrf', 'header', true) || $request->header('csrf') != session('csrf')) {
-                return returnJson(600, 400, '表单token验证失败');
-            }
-            session('csrf', md5($_SERVER['REQUEST_TIME_FLOAT']));
+//            if (!$request->has('csrf', 'header', true) || $request->header('csrf') != session('csrf')) {
+//                return returnJson(600, 400, '表单token验证失败');
+//            }
+//            session('csrf', md5($_SERVER['REQUEST_TIME_FLOAT']));
             return $this->model->add($request->param());
         }
     }
@@ -48,6 +51,13 @@ class Common extends Controller
 
     public function delete(Request $request)
     {
+        if ($request->has('isdel', 'param', true)) {
+            if ($request->param('isdel') == 1) {
+                return $this->model->del($request->param(), false);
+            }
+        }
         return $this->model->del($request->param());
     }
+
+
 }

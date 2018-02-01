@@ -11,5 +11,7 @@ namespace app\admin\model;
 
 class Rtype extends Common
 {
-
+    protected $oneToMany = [
+        'repair'   => 'type',
+    ];
 }

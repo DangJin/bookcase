@@ -21,6 +21,7 @@ class User extends Validate
     protected $message = [
         'type.require'  =>  '用户类型不能为空',
         'phone.require'  =>  '手机号码不能为空',
+        'phone.unique'  => '此号码已被使用',
     ];
 
     protected $scene = [
