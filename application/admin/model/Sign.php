@@ -11,5 +11,13 @@ namespace app\admin\model;
 
 class Sign extends Common
 {
+    protected $parent = [
+        'user' => 'create_user'
+    ];
+
+    public function getByDate($data)
+    {
+        $this->whereTime()
+    }
 
 }

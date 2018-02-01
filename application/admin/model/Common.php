@@ -55,7 +55,7 @@ class Common extends Model
         //多条件查询
         $map = [];
         if (isset($data['search']) && !empty($data['search'])) {
-            if (preg_match('/^[0-9]$/', $data['search'])) {
+            if (preg_match('/^[0-9]+$/', $data['search'])) {
                 $condi = (int)$data['search'];
             } else {
                 $condi = ['like', '%'.$data['search'].'%'];
@@ -91,21 +91,21 @@ class Common extends Model
 
         //查询条件形式
         if (!empty($map)) {
-            if (isset($data['and']) && $data['and'] == 1)
+            if (isset($data['and']) && $data['and'] == 1) {
                 $result = $result->where(function ($query) use ($map) {
                     $query->where($map);
                 });
-            else
+            } else {
                 $result = $result->whereOr(function ($query) use ($map) {
                     $query->whereOr($map);
                 });
+            }
         }
-
         $result = $result->where('isdel', '<>', 1);
 
 
         try {
-            //查询全部数据
+            //查询全部数据（不分页）
             if (isset($data['all']) && $data['all'] == 1) {
                 if (empty($all)) {
                     $count = $result->count();
@@ -116,10 +116,28 @@ class Common extends Model
                 $result = $result->paginate($limit, false, ['page' => $page]);
             }
             $result = $result->toArray();
+
+            //查询父表数据
             if (isset($data['hasParent']) && $data['hasParent'] == 1) {
                 foreach ($result['data'] as &$item) {
                     foreach ($this->parent as $k => $v) {
-                        $item[$v] = $this->table($k)->where('id', $item[$v])->where('isdel', '<>', 1)->find();
+                        $tmp = explode('|', $v);
+                        if (sizeof($tmp) == 1) {
+                            $tmp[1] = '';
+                        }
+                        dump($tmp);
+                        $item[$v] = $this->table($k)->where('id', $item[$tmp[0]])->where('isdel', '<>', 1)->field($tmp[1])->find();
+                    }
+                }
+            }
+
+            //查询子表数据
+            if (isset($data['children']) && !empty($data['children'])) {
+                $keys = array_keys($this->oneToMany);
+                if (!empty($keys)) {
+                    foreach ($result['data'] as &$item) {
+                        $child = $this->getChild($data['children'], $item['id'], $keys);
+                        $item = array_merge($item, $child);
                     }
                 }
             }
@@ -128,6 +146,21 @@ class Common extends Model
         } catch (Exception $e) {
             return returnJson(601,400, $e->getMessage());
         }
+    }
+
+    public function getChild($tables, $id, $keys)
+    {
+        $children = explode(',', $tables);
+        $children = array_filter($children);
+        $children = array_unique($children);
+
+        $result = [];
+        foreach ($children as $child) {
+            if (in_array($child, $keys)) {
+                $result[$child] = $this->table($child)->where($this->oneToMany[$child], $id)->select();
+            }
+        }
+        return $result;
     }
 
     public function add($data)
@@ -150,8 +183,8 @@ class Common extends Model
                 foreach (array_keys($this->manyToMany) as $c) {
                     if (in_array($c, array_keys($data))) {
                         $tmpArr = explode(',', $data[$c]);
-                        $tmpArr = array_unique($tmpArr);
                         $tmpArr = array_filter($tmpArr);
+                        $tmpArr = array_unique($tmpArr);
                         $this->$c()->saveAll($tmpArr);
                     }
                 }

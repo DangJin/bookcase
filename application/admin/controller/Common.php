@@ -27,8 +27,11 @@ class Common extends Controller
 
     public function select(Request $request)
     {
-        return $this->model->select($request->param());
+        $page = $request->has('page', 'param', true) ? $request->param('page') : 1;
+        $limit = $request->has('limit', 'param', true) ? $request->param('limit') : 10;
+        return $this->model->select($request->param(), $page, $limit);
     }
+
 
     public function add(Request $request)
     {
@@ -55,4 +58,6 @@ class Common extends Controller
         }
         return $this->model->del($request->param());
     }
+
+
 }
