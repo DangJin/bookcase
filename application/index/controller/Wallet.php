@@ -11,15 +11,18 @@ namespace app\index\controller;
 
 use app\wechat\controller\WxLogin;
 
-class Wallet extends WxLogin {
+class Wallet extends WxLogin
+{
 
-	public function __construct( \think\Request $request = NULL ) {
-		parent::__construct( $request );
-	}
+    public function __construct(\think\Request $request = null)
+    {
+        parent::__construct($request);
+    }
 
-	public function index() {
+    public function index()
+    {
 
-		session( 'wx_user', NULL );
-		dump( session( 'target_url' ) );
-	}
+        session('wx_user', null);
+        dump(session('user_id'));
+    }
 }

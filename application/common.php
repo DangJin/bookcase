@@ -14,17 +14,20 @@
 function returnJson($code, $status, $value = '')
 {
     if ($status > 300) {
-        return json([
-            'code' => $code,
-            'status' => $status,
-            'msg' => $value,
-        ]);
+        return json(
+            [
+                'code'   => $code,
+                'status' => $status,
+                'msg'    => $value,
+            ]
+        );
     } else {
-        return json([
-            'code' => $code,
-            'status' => $status,
-            'data' => $value,
-        ]);
+        return json(
+            [
+                'code'   => $code,
+                'status' => $status,
+                'data'   => $value,
+            ]
+        );
     }
-
 }

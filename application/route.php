@@ -9,20 +9,44 @@
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
 
-\think\Route::group( 'index', [
-	'wallet' => [ 'index/wallet/index', [ 'method' => 'get' ] ],
-] );
+\think\Route::group(
+    'index', [
+        'wallet'                 => ['index/wallet/index', ['method' => 'get']],
+        'bookcase/list'          => ['index/bookCase/getBookcaseList',
+                                     ['method' => 'get']],
+        'bookcase/drawers'       => ['index/bookCase/drawers',
+                                     ['method' => 'get']],
+        'persCenter/myBorrow'    => ['index/persCenter/myBorrow',
+                                     ['method' => 'POST']],
+        'persCenter/myWish'      => ['index/persCenter/myWish',
+                                     ['method' => 'POST']],
+        'persCenter/myBalance'   => ['index/persCenter/myBalance',
+                                     ['method' => 'GET']],
+        'persCenter/userProfile' => ['index/persCenter/userProfile',
+                                     ['method' => 'GET']],
+    ]
+);
 
-\think\Route::group( 'util', [
-	'sendCode'          => [ 'util/alidayu/sendCode', [ 'method' => 'post' ] ],
-	'status/getAlidayu' => [
-		'util/globalStatus/getAlidayu',
-		[ 'method' => 'GET' ],
-	],
-] );
+\think\Route::group(
+    'util', [
+        'sendCode'          => ['util/alidayu/sendCode', ['method' => 'post']],
+        'status/getAlidayu' => [
+            'util/globalStatus/getAlidayu',
+            ['method' => 'GET'],
+        ],
+    ]
+);
 
-\think\Route::group( 'weixin', [
-	'init'     => [ 'wechat/index/index', [ 'method' => 'GET' ] ],
-	'wxconfig' => [ 'wechat/jsSdk/getWxConfig', [ 'method' => 'POST' ] ],
-	'oauth'    => [ 'wechat/oauth/oauth_callback', [ 'method' => 'GET' ] ],
-] );
+\think\Route::group(
+    'weixin', [
+        'init'     => ['wechat/index/index', ['method' => 'GET']],
+        'wxconfig' => ['wechat/jsSdk/getWxConfig', ['method' => 'POST']],
+        'oauth'    => ['wechat/oauth/oauth_callback', ['method' => 'GET']],
+    ]
+);
+
+\think\Route::group(
+    'wxpay', [
+        'init' => ['wxpay/index/index', ['method' => 'GET']],
+    ]
+);
