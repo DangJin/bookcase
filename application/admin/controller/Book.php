@@ -2,8 +2,8 @@
 /**
  * Created by PhpStorm.
  * User: wry
- * Date: 18/1/30
- * Time: 下午10:22
+ * Date: 18/2/1
+ * Time: 下午9:36
  */
 
 namespace app\admin\controller;
@@ -11,17 +11,15 @@ namespace app\admin\controller;
 
 use think\Request;
 
-class Order extends Common
+class Book extends Comment
 {
     protected $model;
 
     public function __construct(Request $request = null)
     {
         parent::__construct($request);
-        $this->model = new \app\admin\model\Order();
+        $this->model = new \app\admin\model\Book();
     }
 
-    public function getbuybook(Request $request) {
-        return $this->model->getbuybook($request->param());
-    }
+
 }

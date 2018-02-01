@@ -20,4 +20,11 @@ class User extends Common
         parent::__construct($request);
         $this->model = new \app\admin\model\User();
     }
+
+    public function borrows(Request $request)
+    {
+        $page = empty($request->param('page')) ? 1 : $request->param('page');
+        $limit = empty($request->param('limit')) ? 10 : $request->param('limit');
+        return $this->model->borrows($request->param(), $page, $limit);
+    }
 }

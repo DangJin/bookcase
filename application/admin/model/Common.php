@@ -125,8 +125,7 @@ class Common extends Model
                         if (sizeof($tmp) == 1) {
                             $tmp[1] = '';
                         }
-                        dump($tmp);
-                        $item[$v] = $this->table($k)->where('id', $item[$tmp[0]])->where('isdel', '<>', 1)->field($tmp[1])->find();
+                        $item[$tmp[0]] = $this->table($k)->where('id', $item[$tmp[0]])->where('isdel', '<>', 1)->field($tmp[1])->find();
                     }
                 }
             }
