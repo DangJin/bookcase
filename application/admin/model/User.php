@@ -13,9 +13,9 @@ use think\Db;
 
 class User extends Common
 {
-    protected $addallow = ['type', 'phone', 'name', 'gender', 'state', 'sort'];
+    protected $addallow = ['type', 'phone', 'name', 'gender', 'state', 'sort', 'modify_time', 'modify_user', 'create_time', 'create_user'];
 
-    protected $upallow = ['phone', 'name', 'gender', 'state', 'sort'];
+    protected $upallow = ['phone', 'name', 'gender', 'state', 'sort', 'modify_time', 'modify_user'];
 
     protected $manyToMany = [
         'book'       => 'wish,create_user', #心愿单
