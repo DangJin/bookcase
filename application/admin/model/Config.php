@@ -33,4 +33,26 @@ class Config extends Common
 
         return returnJson(704, 200, '更新成功');
     }
+
+    public function addDeposit($data)
+    {
+        if (empty($data['money'])) {
+            return returnJson(607, 400, '缺少押金参数');
+        }
+
+        if (empty($data['num'])) {
+            return returnJson(607, 400, '缺少可借数量参数');
+        }
+
+        $data['body'] = $data['money'].','.$data['num'];
+        $data['type'] = 'DEPOSIT';
+        $this->validate(true)->allowField(true)->save($data);
+        return returnJson(702, 200, $this);
+    }
+
+    public function updateDeposit()
+    {
+
+    }
+
 }

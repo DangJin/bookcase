@@ -26,7 +26,7 @@ class Bookcase extends Validate
 
     protected $message = [
         'name.require'  =>  '名称不能为空',
-        'number.require'  =>  '省不能为空',
+        'number.require'  =>  '编号不能为空',
         'province.require'  =>  '省不能为空',
         'city.require'  =>  '市不能为空',
         'county.require'  =>  '县不能为空',

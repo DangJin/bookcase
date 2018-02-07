@@ -21,5 +21,17 @@ class Bookcase extends Common
         $this->model = new \app\admin\model\Bookcase();
     }
 
-    
+    public function add(Request $request)
+    {
+        return $this->model->add($request->param());
+    }
+
+    public function getByArea(Request $request)
+    {
+        return $this->model->getByArea($request->param());
+    }
+
+    public function getManage(Request $request) {
+        return $this->model->getManage($request->param());
+    }
 }

@@ -32,4 +32,9 @@ class Config extends Common
     {
         return $this->model->upcredit($request->param());
     }
+
+    public function addDeposit(Request $request)
+    {
+        return $this->model->addDeposit($request->param());
+    }
 }
