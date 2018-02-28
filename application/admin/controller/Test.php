@@ -9,12 +9,17 @@
 namespace app\admin\controller;
 
 
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\QrCode;
+
 class Test
 {
     public function test(){
-        $a = ['wang' => 1];
-        $b = ['zhang' => 2];
-        $c = array_merge($a, $b);
-        dump($c);
+        echo '1233';
+    }
+
+    public function createQrcode()#$filename, $data)
+    {
+
     }
 }

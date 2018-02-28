@@ -9,7 +9,10 @@
 namespace app\admin\model;
 
 
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\QrCode;
 use think\Db;
+use ZipStream\ZipStream;
 
 class Bookcase extends Common
 {
@@ -40,7 +43,9 @@ class Bookcase extends Common
             $result = $this->validate(true)->allowField($this->addallow)->validate(true)->save($data);
             if ($result == false)
                 return returnJson(603, 400, $this->getError());
-            $this->table('drawer')->insertAll($this->createBooks(['pid' => $this->getAttr('id')], (int)$data['num']));
+            $drawer = $this->createDrawers(['pid' => $this->getAttr('id')], (int)$data['num']);
+            $this->table('drawer')->insertAll($drawer);
+            $this->createZip($data['number'], $drawer);
             $this->commit();
         } catch (\Exception $e) {
             $this->rollback();
@@ -52,7 +57,7 @@ class Bookcase extends Common
         return returnJson(702, 200, $this->toArray());
     }
 
-    private function createBooks($data, $num)
+    private function createDrawers($data, $num)
     {
         $drawer = [];
         $no = 'dra';
@@ -152,5 +157,36 @@ class Bookcase extends Common
             return returnJson(701, 200, $info);
         elseif ($returnType == 2)
             return $info;
+    }
+
+    protected function createZip($dirname, $data)
+    {
+        $path = ROOT_PATH . 'public' . DS . 'uploads' . DS . $dirname;
+        if (!is_dir($path)) {
+            mkdir($path, 0777, true);
+            $this->createQrcode('Qr code', $dirname, $path);
+            foreach ($data as $item) {
+                $this->createQrcode($item['number'], $item['number'], $path);
+            }
+//            $files = scandir($path);
+//            $zip = new ZipStream($dirname.'.zip');
+//            foreach ($files as $path) {
+//                if ($path != '.' && $path != '..') {
+//                    $zip->addFile($path, file_get_contents($path));
+//                }
+//            }
+//            $zip->finish();
+        } else {
+            throw Exception('此二维码文件夹已经存在');
+        }
+    }
+
+    protected function createQrcode($message, $filename, $path)
+    {
+        $qrcode = new QrCode($message);
+        $qrcode->setLogoPath(ROOT_PATH . 'public' . DS . 'logo.png');
+        $qrcode->setLogoWidth(60);
+        $qrcode->setErrorCorrectionLevel(ErrorCorrectionLevel::QUARTILE);
+        $qrcode->writeFile($path. DS . $filename .'.png');
     }
 }

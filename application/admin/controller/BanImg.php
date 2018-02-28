@@ -30,10 +30,10 @@ class BanImg extends Common
             if ($info) {
                 $data['path'] = ROOT_PATH . 'public' . DS . 'uploads' . DS . $info->getSaveName();
                 $data['imgurl'] = $request->host(). DS . 'images' . DS . $info->getSaveName();
-                $time = date('Y-m-d H:i:s', strtotime('noe'));
-                $data['name'] =
-                $data['create_user'] = session('id');
-                $data['modify_user'] = session('id');
+                $time = date('Y-m-d H:i:s', strtotime('now'));
+                $data['name'] = $request->has('name', 'param', true) ? $request->param('name') : '';
+//                $data['create_user'] = session('id');
+//                $data['modify_user'] = session('id');
                 $data['url'] = $request->has('url', 'param', true) ? $request->param('url') : '';
             } else {
                 return returnJson(609, 400, '上传失败');
