@@ -14,13 +14,15 @@ use think\Validate;
 class Config extends Validate
 {
     protected $rule = [
-        'number' => 'require',
-        'pid' => 'require'
+        'title' => 'require',
+        'body' => 'require',
+        'type' => 'require',
     ];
 
     protected $message = [
-        'number.require' => '编号不能为空',
-        'pid.require' => '所属柜子编号ID不能为空'
+        'title.require' => '名称不能为空',
+        'body.require' => '内容不能为空',
+        'type.require' => '类型不能为空',
     ];
 
     protected $scene = [

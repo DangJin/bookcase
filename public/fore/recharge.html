@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>充值</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="css/bootstrap.3.3.7min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/animate.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="recharge">
+    <div class="title">充值金额</div>
+    <div class="money_select">
+        <ul>
+            <li>
+                <a href="javascript:void(0)"><span>200</span>元</a>
+            </li>
+            <li>
+                <a href="javascript:void(0)"><span>100</span>元</a>
+            </li>
+            <li>
+                <a href="javascript:void(0)"><span>50</span>元</a>
+            </li>
+            <li class="active">
+                <a href="javascript:void(0)"><span>20</span>元</a>
+            </li>
+        </ul>
+    </div>
+    <div class="money_input">
+        <span>￥</span>
+        <input type="number" placeholder="(自定义金额)" onfocus="InputFocus()" value="20">
+    </div>
+    <a href="">立即充值</a>
+    <p>点击充值，即表示同意<a href="">《服务条款》《隐私条款》</a></p>
+</div>
+</body>
+<script src="js/jquery.2.1.1min.js"></script>
+<script>
+
+  $('.money_select>ul>li').click(function () {
+    var moneyNum = $(this).find('span').text()
+    $(this).siblings().removeClass('active')
+    $(this).addClass('active')
+    $('.money_input>input').val(moneyNum)
+  })
+
+  function InputFocus () {
+    $('.money_select>ul>li').removeClass('active')
+  }
+
+</script>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>图书详情</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="css/bootstrap.3.3.7min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/animate.css">
+    <link rel="stylesheet" href="css/toast.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script data-main="scripts/productM" src="js/require.js"></script>
+</head>
+<body>
+<div class="productM">
+</div>
+<script type="text/html" id="productM">
+    <div class="productM_top">
+        <img src="{{data.cover}}" alt="">
+        <div class="content">
+            <h5>{{data.title}}</h5>
+            <span>作者：{{data.author}}</span>
+            <p>出版社：{{data.press}}</p>
+        </div>
+        <div class="text">
+            <p>{{data.details}}</p>
+            <a href="javascript:void(0)">更多</a>
+        </div>
+        <div class="productM_a">
+            <a href="articleList.html?bid={{data.id}}">
+                <img src="image/mulu.png" alt="">
+                <span>目录</span>
+            </a>
+            <a href="">
+                <img src="image/pinglun.png" alt="">
+                <span>点评</span>
+            </a>
+            <a href="">
+                <img src="image/card.png" alt="">
+                <span>借</span>
+            </a>
+        </div>
+    </div>
+    <div class="productM_list">
+        <ul>
+            {{each data.comments}}
+            <li>
+                <p>{{$value.body}}</p>
+                <span>{{$value.uname}}</span>
+            </li>
+            {{/each}}
+        </ul>
+    </div>
+    <div class="productM_bottom">
+        <a>加入心愿单</a>
+        <a>立即购买</a>
+    </div>
+</script>
+</body>
+</html>
