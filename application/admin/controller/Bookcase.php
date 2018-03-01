@@ -10,6 +10,7 @@ namespace app\admin\controller;
 
 
 use think\Request;
+use ZipStream\ZipStream;
 
 class Bookcase extends Common
 {
@@ -33,5 +34,22 @@ class Bookcase extends Common
 
     public function getManage(Request $request) {
         return $this->model->getManage($request->param());
+    }
+
+    public function getZip(Request $request)
+    {
+        if (!$request->has('dirname', 'param', true)) {
+            return returnJson('400', '607', '缺少dirname参数');
+        }
+        $dirname = $request->param('dirname');
+        $path = ROOT_PATH . 'public' . DS . 'uploads' . DS . $dirname;
+        $files = scandir($path);
+        $zip = new ZipStream($dirname.'.zip');
+        foreach ($files as $file) {
+            if ($file != '.' && $file != '..') {
+                $zip->addFile($file, file_get_contents($path . DS . $file));
+            }
+        }
+        $zip->finish();
     }
 }

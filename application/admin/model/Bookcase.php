@@ -27,10 +27,8 @@ class Bookcase extends Common
             return returnJson(602, 400, '添加参数不能为空');
         }
 
-        if (empty($data['num'])) {
-            return returnJson(602, 400, '抽屉数量不能为空');
-        } elseif (!is_numeric($data['num'])) {
-            return returnJson(602, 400, '抽屉数为整数');
+        if (empty($data['norms'])) {
+            return returnJson(602, 400, '抽屉规格不能为空');
         }
 
         $data['create_user'] = session('id');
@@ -43,9 +41,9 @@ class Bookcase extends Common
             $result = $this->validate(true)->allowField($this->addallow)->validate(true)->save($data);
             if ($result == false)
                 return returnJson(603, 400, $this->getError());
-            $drawer = $this->createDrawers(['pid' => $this->getAttr('id')], (int)$data['num']);
+            $drawer = $this->createDrawers(['pid' => $this->getAttr('id')], $data['norms']);
             $this->table('drawer')->insertAll($drawer);
-            $this->createZip($data['number'], $drawer);
+            $this->createQrcodes($data['number'], $drawer);
             $this->commit();
         } catch (\Exception $e) {
             $this->rollback();
@@ -57,20 +55,25 @@ class Bookcase extends Common
         return returnJson(702, 200, $this->toArray());
     }
 
-    private function createDrawers($data, $num)
+    private function createDrawers($data, $norms)
     {
         $drawer = [];
         $no = 'dra';
         $time = strtotime('now');
         $date = date('Y-m-d H:i:s', $time);
-        for ($i = 0; $i < $num; $i++) {
-            $tmp = $data;
-            $tmp['number'] = $no.$time.$this->num2str($i, 3);
-            $tmp['create_user'] = session('id');
-            $tmp['modify_user'] = session('id');
-            $tmp['create_time'] = $date;
-            $tmp['modify_time'] = $date;
-            array_push($drawer, $tmp);
+        $norms = explode(',', $norms);
+        for ($i = 1; $i <= $norms[0]; $i++) {
+            for ($j = 1; $j <= $norms[1]; $j++) {
+                $tmp = $data;
+                $tmp['row'] = $i;
+                $tmp['col'] = $j;
+                $tmp['number'] = $no.$time.$this->num2str($i, 3);
+                $tmp['create_user'] = session('id');
+                $tmp['modify_user'] = session('id');
+                $tmp['create_time'] = $date;
+                $tmp['modify_time'] = $date;
+                array_push($drawer, $tmp);
+            }
         }
         return $drawer;
     }
@@ -159,23 +162,15 @@ class Bookcase extends Common
             return $info;
     }
 
-    protected function createZip($dirname, $data)
+    protected function createQrcodes($dirname, $data)
     {
         $path = ROOT_PATH . 'public' . DS . 'uploads' . DS . $dirname;
         if (!is_dir($path)) {
             mkdir($path, 0777, true);
-            $this->createQrcode('Qr code', $dirname, $path);
+            $this->createQrcode($dirname, $dirname, $path);
             foreach ($data as $item) {
                 $this->createQrcode($item['number'], $item['number'], $path);
             }
-//            $files = scandir($path);
-//            $zip = new ZipStream($dirname.'.zip');
-//            foreach ($files as $path) {
-//                if ($path != '.' && $path != '..') {
-//                    $zip->addFile($path, file_get_contents($path));
-//                }
-//            }
-//            $zip->finish();
         } else {
             throw Exception('此二维码文件夹已经存在');
         }
