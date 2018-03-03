@@ -50,7 +50,11 @@ class Common extends Model
      */
     public function select($data, $page = 1, $limit = 10, $all = '')
     {
-        $result = $this->order('sort desc');
+        if (!empty($data['order'])) {
+            $result = $this->order($data['order']);
+        } else {
+            $result = $this->order('sort desc');
+        }
 
         //多条件查询
         $map = [];
@@ -101,7 +105,6 @@ class Common extends Model
                 });
             }
         }
-        $result = $result->where('isdel', '<>', 1);
 
 
         try {
@@ -125,8 +128,7 @@ class Common extends Model
                         if (sizeof($tmp) == 1) {
                             $tmp[1] = '';
                         }
-                        dump($tmp);
-                        $item[$v] = $this->table($k)->where('id', $item[$tmp[0]])->where('isdel', '<>', 1)->field($tmp[1])->find();
+                        $item[$tmp[0]] = $this->table($k)->where('id', $item[$tmp[0]])->where('isdel', '<>', 1)->field($tmp[1])->find();
                     }
                 }
             }
@@ -169,8 +171,8 @@ class Common extends Model
             return returnJson(602, 400, '添加参数不能为空');
         }
 
-//        $data['create_user'] = session('sId');
-//        $data['modify_user'] = session('sId');
+        $data['create_user'] = session('id');
+        $data['modify_user'] = session('id');
 
         $this->startTrans();
         try {
@@ -204,6 +206,8 @@ class Common extends Model
         if (!isset($data['id']) && empty($data['id'])) {
             return returnJson(605, 400, '更新缺少主键参数');
         }
+
+        $data['modify_user'] = session('id');
         $this->startTrans();
         try {
             $result = $this->allowField($this->upallow)->validate($this->name.'.update')->isUpdate(true)->save($data);
@@ -234,7 +238,12 @@ class Common extends Model
             return returnJson(604, 400, '缺少删除参数');
         }
         if ($softdel) {
-            $this->where('id', 'in', $data['ids'])->update(['isdel' => 1]);
+
+            $this->where('id', 'in', $data['ids'])->update([
+                'isdel' => 1,
+                'modify_user' => session('id'),
+                'modify_time' => date('Y-m-d H:i:s', strtotime('now'))
+            ]);
         } else {
             $this->startTrans();
             try {
