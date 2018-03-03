@@ -32,8 +32,6 @@ class BanImg extends Common
                 $data['imgurl'] = $request->host(). DS . 'images' . DS . $info->getSaveName();
                 $time = date('Y-m-d H:i:s', strtotime('now'));
                 $data['name'] = $request->has('name', 'param', true) ? $request->param('name') : '';
-//                $data['create_user'] = session('id');
-//                $data['modify_user'] = session('id');
                 $data['url'] = $request->has('url', 'param', true) ? $request->param('url') : '';
             } else {
                 return returnJson(609, 400, '上传失败');
@@ -42,6 +40,32 @@ class BanImg extends Common
         } else {
             return returnJson(609, 400, $file->getError());
         }
+    }
 
+
+    public function delete(Request $request)
+    {
+        return $this->model->del($request->param());
+    }
+
+    public function getZip(Request $request)
+    {
+        if (!$request->has('dirname', 'param', true)) {
+            return returnJson('400', '607', '缺少dirname参数');
+        }
+        $dirname = $request->param('dirname');
+        $path = ROOT_PATH . 'public' . DS . 'uploads' . DS . $dirname;
+        if (is_dir($path)) {
+            $files = scandir($path);
+            $zip = new ZipStream($dirname.'.zip');
+            foreach ($files as $file) {
+                if ($file != '.' && $file != '..') {
+                    $zip->addFile($file, file_get_contents($path . DS . $file));
+                }
+            }
+            $zip->finish();
+        } else {
+            return returnJson(608, 400, '没有此文件夹');
+        }
     }
 }

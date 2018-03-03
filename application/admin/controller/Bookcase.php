@@ -24,7 +24,15 @@ class Bookcase extends Common
 
     public function add(Request $request)
     {
-        return $this->model->add($request->param());
+        if ($request->isPost())
+        {
+            if (!$request->has('csrf', 'header', true) || $request->header('csrf') != session('csrf'))
+            {
+                return returnJson(600, 400, '表单token验证失败');
+            }
+            session('csrf', md5($_SERVER['REQUEST_TIME_FLOAT']));
+            return $this->model->add($request->param());
+        }
     }
 
     public function getByArea(Request $request)

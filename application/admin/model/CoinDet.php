@@ -2,14 +2,14 @@
 /**
  * Created by PhpStorm.
  * User: wry
- * Date: 18/1/29
- * Time: 下午7:59
+ * Date: 18/3/2
+ * Time: 下午2:35
  */
 
 namespace app\admin\model;
 
 
-class PointRuleDet extends Common
+class CoinDet extends Common
 {
 
 }
