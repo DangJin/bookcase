@@ -2,8 +2,13 @@
 
 namespace app\wxpay\controller;
 
-class Index {
+use think\Controller;
 
-	public function index() {
-	}
+class Index extends Common
+{
+
+    public function index()
+    {
+
+    }
 }

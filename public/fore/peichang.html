@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>损坏赔偿</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="css/bootstrap.3.3.7min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/animate.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="peiChang">
+    <div class="title">图书损坏赔偿</div>
+    <div class="book">
+        <img src="image/list4.png" alt="">
+        <div class="content">
+            <h5>天才在做，疯子在子在子在右</h5>
+            <span>订单编号：2018701231313211104546321</span>
+            <span>租借时间：2天02小时</span>
+        </div>
+        <p>赔偿金额 <span>98元</span></p>
+        <ul>
+            <li><span>租借费用</span><span>28元</span></li>
+            <li><span>买断金额：</span><span>28元</span></li>
+            <li><span>补偿：</span><span>50元</span></li>
+        </ul>
+    </div>
+    <a href="">支付</a>
+</div>
+</body>
+<script src="js/jquery.2.1.1min.js"></script>
+<script src="js/bootstrap.3.3.7min.js"></script>
+<script>
+  $(document).ready(function () {
+    $('.selectPei>ul>li').click(function () {
+      $(this).siblings().removeClass('active')
+      $(this).addClass('active')
+    })
+  })
+</script>
+</html>

@@ -4,10 +4,8 @@ namespace app\index\model;
 
 use think\Model;
 
-class BookImg extends Common
+class Repair extends Common
 {
+
     //
-
-
-
 }

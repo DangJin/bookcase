@@ -18,17 +18,35 @@ use think\Request;
 class WxLogin extends Controller
 {
 
-    public function __construct(\think\Request $request = null)
+    //    public function __construct(\think\Request $request = null)
+    //    {
+    //        parent::__construct($request);
+    //        Config::load(APP_PATH.'/wechat/config.php');
+    //        if (Config::has('wxconfig')) {
+    //            $wxConfig  = Config::get('wxconfig');
+    //            $this->app = Factory::officialAccount($wxConfig);
+    //            $oauth     = $this->app->oauth;
+    //            if (empty(session('wx_user'))) {
+    //                session('target_url', $request->url());
+    //                $oauth->redirect()->send();
+    //            }
+    //        }
+    //    }
+
+    public function wxLogin(Request $request)
     {
-        parent::__construct($request);
-        Config::load(APP_PATH . '/wechat/config.php');
+        Config::load(APP_PATH.'/wechat/config.php');
         if (Config::has('wxconfig')) {
             $wxConfig  = Config::get('wxconfig');
             $this->app = Factory::officialAccount($wxConfig);
             $oauth     = $this->app->oauth;
             if (empty(session('wx_user'))) {
-                session('target_url', $request->url());
+                session('target_url', $request->param('target_url'));
                 $oauth->redirect()->send();
+            } else {
+                header(
+                    'location:'.$request->param('target_url').'?state=1'
+                );
             }
         }
     }

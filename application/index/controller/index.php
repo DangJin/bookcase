@@ -5,6 +5,7 @@ namespace app\index\controller;
 use app\index\model\User;
 use app\index\model\UseRole;
 use think\Controller;
+use ZipStream\ZipStream;
 
 class Index extends Controller
 {
@@ -26,7 +27,9 @@ class Index extends Controller
 
     public function index()
     {
-        echo 123;
+//        $zip = new ZipStream('example.zip');
+//        $zip->addFileFromPath('debug.js', ROOT_PATH.'public/static/script/');
+//         return $zip->finish();
     }
 
 }

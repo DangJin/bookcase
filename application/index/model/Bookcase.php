@@ -56,10 +56,40 @@ class Bookcase extends Common
     }
 
 
+    /**
+     * @param int $id
+     *
+     * @return array|bool
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function caseInfo(int $id)
     {
         // 查询书柜下所有抽屉id
-        // 查询书柜下所有抽屉下图书
+        $case = $this->where('id', $id)->field('id,name,address,cover')->find();
+        if ( ! empty($case)) {
+            // 查询书柜下所有抽屉下图书
+            $drawers = $this->hasMany('drawer', 'pid')
+                ->join('books', 'books.pid=drawer.id')
+                ->join('book', 'book.id=books.pid')
+                ->where('drawer.pid', $case->getAttr('id'))
+                //                ->field(
+                //                    'book.title,book.press,book.author,book.type,book.cover,book.price,book.borrow,
+                //                book.buyout,drawer.number drawerNo,books.number booksNo,book.id bId'
+                //                )->select();
+                ->field(
+                    'book.title,book.type,book.details,book.cover,book.borrow,drawer.number drawerNo,books.number booksNo,book.id bId'
+                )->select();
+
+            $case_arr            = $case->toArray();
+            $case_arr['drawers'] = $drawers->toArray();
+
+            return $case_arr;
+        }
+
+        return false;
     }
 
 
@@ -75,7 +105,7 @@ class Bookcase extends Common
      */
     public function drawers($case_id)
     {
-        if (empty($case_id) || $case_id != null) {
+        if ( ! empty($case_id)) {
             return $this->hasMany('drawer', 'pid')->where('pid', $case_id)
                 ->select()->hidden(['pid'])
                 ->toArray();
@@ -83,4 +113,46 @@ class Bookcase extends Common
 
         return false;
     }
+
+    /**
+     * @param $bname
+     *
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function searchBook($bname)
+    {
+        if ( ! empty($bname)) {
+            $data = $this->hasMany('drawer', 'pid')
+                ->join('books', 'books.pid=drawer.id')
+                ->join('book', 'book.id=books.pid')
+                ->where("book.title", 'like', '%'.$bname.'%')
+                ->field(
+                    'book.title,book.press,book.author,book.type,book.cover,book.price,book.borrow,
+                book.buyout,drawer.number drawerNo,drawer.pid caseId,books.number booksNo,book.id bId'
+                )
+                ->select()
+                ->toArray();
+
+            // 兑换柜子信息
+            $case_ids = [];
+            foreach ($data as $key => $value) {
+                // 提取case_id
+                if ( ! in_array($value['caseId'], $case_ids)) {
+                    array_push($case_ids, $value['caseId']);
+                }
+            }
+            $case_ids_str = implode(",", $case_ids);
+            $case         = $this->where('id', 'in', $case_ids_str)
+                ->select()
+                ->toArray();
+            $case_arr     = [];
+            foreach ($case as $key => $value) {
+                array_push($case_arr, [$value["id"] => $value]);
+            }
+            dump($case_arr);
+        }
+    }
+
 }

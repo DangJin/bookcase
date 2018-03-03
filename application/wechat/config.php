@@ -2,8 +2,8 @@
 //配置文件
 return [
 	'wxconfig' => [
-		'app_id'        => 'wx33584f71b4a84fa9',
-		'secret'        => '029b4c9b947564b763b0191445aabdca',
+		'app_id'        => 'wx5c1a89ec7428682c',
+		'secret'        => '99d1e39ce049ba5beabe5ddc95e4833c',
 		'token'         => 'titibook',
 		'response_type' => 'array',
 		'log'           => [

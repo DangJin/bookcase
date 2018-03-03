@@ -2,6 +2,7 @@
 
 namespace app\index\controller;
 
+use app\index\model\Books;
 use think\Controller;
 use think\Request;
 
@@ -55,7 +56,7 @@ class BookCase extends Common
         $city = $request->param('city');
         $lat  = $request->param('lat');
         $lng  = $request->param('lng');
-        if ( ! isset($city) || ! isset($lat) || ! isset($lng)) {
+        if (empty($city) || empty($lat) || empty($lng)) {
             return returnJson(400, 400, '必需参数不能为空');
         }
         $data = $this->bookcase->casesList($city, $lat, $lng);
@@ -67,13 +68,30 @@ class BookCase extends Common
 
     }
 
+
+    /**
+     * 获取书柜下所有所有图书信息
+     *
+     * @param \think\Request $request
+     *
+     * @return \think\response\Json
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function getBookcaseBooks(Request $request)
     {
-        if ( ! input('?get.case_id')) {
+        $case_id = $request->param('case_id');
+        if (empty($case_id)) {
             return returnJson(400, 400, '必需参数不能为空');
         }
+        $data = $this->bookcase->caseInfo($case_id);
+        if ($data) {
+            return returnJson(200, 200, $data);
+        }
 
+        return returnJson(400, 400, "暂无数据");
     }
-
 
 }

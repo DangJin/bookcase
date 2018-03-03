@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>图书点评</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="css/bootstrap.3.3.7min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/animate.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script data-main="scripts/comment" src="js/require.js"></script>
+</head>
+<body>
+<div class="comment">
+    <div class="title">
+    </div>
+    <script type="text/html" id="title">
+        <img src="{{data.cover}}" alt="">
+        <div class="content">
+            <h5>{{data.title}}</h5>
+            <span>作者：{{data.author}}</span>
+            <p>出版社：{{data.press}}</p>
+        </div>
+    </script>
+    <div class="content">
+        <textarea placeholder="请填写评论..."></textarea>
+    </div>
+    <a>提交</a>
+</div>
+</body>
+<script src="js/jquery.2.1.1min.js"></script>
+<script>
+</script>
+</html>

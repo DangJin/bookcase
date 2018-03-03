@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>意见反馈</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="css/bootstrap.3.3.7min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/animate.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="repair">
+    <div class="title">意见反馈</div>
+    <div class="content">
+        <textarea class="opinion_input" placeholder="请输入......"></textarea>
+    </div>
+    <div class="photo">
+        <ul>
+            <li>
+                <img src="image/camera2.png" alt="">
+            </li>
+        </ul>
+    </div>
+    <a href="">立即提交</a>
+</div>
+</body>
+<script src="js/jquery.2.1.1min.js"></script>
+<script>
+  $('.list>ul>li').click(function () {
+    $('.list>ul>li').removeClass('hidden')
+    var Text = $('<span></span>')
+    Text.append($(this).text())
+    $('.about').text('').append(Text)
+    $(this).addClass('hidden')
+  })
+  $('.about').click(function () {
+    $(this).text('')
+    $('.list>ul>li').removeClass('hidden')
+  })
+</script>
+</html>

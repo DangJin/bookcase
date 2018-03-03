@@ -15,6 +15,7 @@ use think\Config;
 use think\Controller;
 use think\Db;
 use think\Log;
+use think\Session;
 
 class Oauth extends Controller
 {
@@ -25,7 +26,7 @@ class Oauth extends Controller
     public function __construct(\think\Request $request = null)
     {
         parent::__construct($request);
-        Config::load(APP_PATH . '/wechat/config.php');
+        Config::load(APP_PATH.'/wechat/config.php');
         if (Config::has('wxconfig')) {
             $this->wxConfig = Config::get('wxconfig');
         }
@@ -40,15 +41,17 @@ class Oauth extends Controller
      */
     public function oauth_callback()
     {
+        if (Session::get('wx_user')) {
+            return returnJson(200, 200, Session::get('wx_user'));
+        }
         $oauth = $this->app->oauth;
         $user  = $oauth->user();
         // 业务逻辑
         session('wx_user', $user->toArray());
         $this->getUserId($user);
-        $target_url = session('target_url');
-        if ( ! empty($target_url)) {
-            header('location:' . $target_url); // 跳转到 user/profile
-        }
+
+        // 其他业务逻辑
+        return returnJson(200, 200, $user->toArray());
     }
 
     /**
