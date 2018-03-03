@@ -1,6 +1,7 @@
 define(['api'], function (api) {
   const BookCase = api.api.BookCase || ''
 
+<<<<<<< HEAD
   // 某区域书柜列表
   var getBookCaseList = function (options, callback) {
     $.ajax({
@@ -23,6 +24,8 @@ define(['api'], function (api) {
       }
     })
   }
+=======
+>>>>>>> master
   // 书柜详情
   var getBookCaseMessage = function (options, callback) {
     $.ajax({
@@ -65,6 +68,7 @@ define(['api'], function (api) {
     })
   }
 
+<<<<<<< HEAD
 
   // 图书目录
   var getArticleList = function (options, callback) {
@@ -87,6 +91,8 @@ define(['api'], function (api) {
     })
   }
 
+=======
+>>>>>>> master
   // 加入心愿单
   var addMyWant = function (options, callback) {
     $.ajax({
@@ -108,6 +114,7 @@ define(['api'], function (api) {
     })
   }
 
+<<<<<<< HEAD
   // 微信地图导航
   var getMapWxconfig = function (options, callback) {
     $.ajax({
@@ -116,6 +123,15 @@ define(['api'], function (api) {
       data: {
         jsApiList: options.jsApiList,
         debug: options.debug
+=======
+  // 加入心愿单
+  var getArticleList = function (options, callback) {
+    $.ajax({
+      type: 'GET',
+      url: BookCase.getArticleList,
+      data: {
+        book_id: options.book_id
+>>>>>>> master
       },
       dataType: 'json',
       success: function (res) {
@@ -130,6 +146,7 @@ define(['api'], function (api) {
     })
   }
 
+<<<<<<< HEAD
 
   return {
     getBookCaseList: getBookCaseList,
@@ -138,5 +155,12 @@ define(['api'], function (api) {
     getArticleList: getArticleList,
     addMyWant: addMyWant,
     getMapWxconfig: getMapWxconfig
+=======
+  return {
+    getBookCaseMessage: getBookCaseMessage,
+    getBookMessage: getBookMessage,
+    addMyWant: addMyWant,
+    getArticleList: getArticleList
+>>>>>>> master
   }
 })

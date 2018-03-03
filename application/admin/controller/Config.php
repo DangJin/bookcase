@@ -37,4 +37,19 @@ class Config extends Common
     {
         return $this->model->addDeposit($request->param());
     }
+
+    public function upDeposit(Request $request)
+    {
+        return $this->model->upDeposit($request->param());
+    }
+
+    public function delDeposit(Request $request)
+    {
+        return $this->model->delDeposit($request->param());
+    }
+
+    public function sesame(Request $request)
+    {
+        return $this->model->sesame($request->param());
+    }
 }

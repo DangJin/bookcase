@@ -251,6 +251,7 @@ li {
   .articleList_top {
     float: left;
     width: 100%;
+<<<<<<< HEAD
     height: 180px;
     overflow: hidden;
     img {
@@ -262,6 +263,28 @@ li {
       -moz-filter: blur(2px);
       -ms-filter: blur(2px);
       filter: blur(3px);
+=======
+    padding: 12px 15px 10px 15px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    .img {
+      width: 90px;
+      height: 120px;
+      box-shadow: 0 2px 4px #999;
+      img {
+        float: left;
+        width: 100%;
+        height: 100%;
+      }
+    }
+    @media (min-width: 365px) {
+      .img {
+        width: 105px;
+        height: 145px;
+      }
+>>>>>>> master
     }
   }
   .articleList_content {
@@ -655,7 +678,11 @@ li {
             margin-left: 20px;
             h5 {
               float: left;
+<<<<<<< HEAD
               width: 90%;
+=======
+              width: 100%;
+>>>>>>> master
               margin-top: 4px;
               margin-bottom: 2px;
               color: #333;
@@ -816,9 +843,13 @@ li {
       float: left;
       width: 100%;
       padding: 0;
+<<<<<<< HEAD
       margin-top: 12px;
       margin-bottom: 0;
       border-top: solid 1px #eee;
+=======
+      margin-bottom: 10px;
+>>>>>>> master
       li {
         position: relative;
         float: left;
@@ -1219,6 +1250,7 @@ li {
   .list {
     float: left;
     width: 100%;
+<<<<<<< HEAD
     > img {
       float: left;
       width: 100%;
@@ -1232,12 +1264,29 @@ li {
         float: left;
         width: 100%;
         height: 120px;
+=======
+    ul {
+      float: left;
+      width: 100%;
+      padding: 0 10px;
+      margin: 0;
+      li {
+        float: left;
+        width: 100%;
+        height: 102px;
+        margin-bottom: 8px;
+        box-shadow: 0 0 4px #ccc;
+>>>>>>> master
         background-color: #fff;
         img {
           float: left;
           width: 56px;
           height: 82px;
+<<<<<<< HEAD
           margin: 15px 12px;
+=======
+          margin: 10px 12px;
+>>>>>>> master
           object-fit: cover;
         }
         .content {
@@ -1247,7 +1296,11 @@ li {
           h5 {
             float: left;
             width: 100%;
+<<<<<<< HEAD
             margin-top: 15px;
+=======
+            margin-top: 10px;
+>>>>>>> master
             margin-bottom: 4px;
             font-size: 16px;
             word-break: break-all;
@@ -1275,7 +1328,10 @@ li {
         .operation {
           float: left;
           width: calc(100% - 80px);
+<<<<<<< HEAD
           margin-top: 5px;
+=======
+>>>>>>> master
           a {
             display: inline-block;
             float: right;
@@ -1577,7 +1633,11 @@ li {
   .title {
     float: left;
     width: 100%;
+<<<<<<< HEAD
     margin-top: 20px;
+=======
+    margin-top: 60px;
+>>>>>>> master
     padding: 0 18px;
     font-size: 17px;
   }
@@ -1631,7 +1691,11 @@ li {
       border: none;
       color: #666;
       padding: 0;
+<<<<<<< HEAD
       font-size: 16px;
+=======
+      font-size: 15px;
+>>>>>>> master
       text-align: center;
       border-radius: 0;
       border-bottom: solid 1.5px #ccc;
@@ -1676,7 +1740,10 @@ li {
 /*柜子地图列表*/
 
 .productMap {
+<<<<<<< HEAD
   position: relative;
+=======
+>>>>>>> master
   float: left;
   width: 100%;
   height: 100vh;
@@ -1688,22 +1755,38 @@ li {
   .InfoWindow {
     display: none;
     position: fixed;
+<<<<<<< HEAD
     width: calc(100% - 40px);
     height: 235px;
     left: 20px;
     top: 80px;
     box-shadow: 0 20px 30px rgba(0, 0, 0, 0.6);
+=======
+    width: calc(100% - 30px);
+    height: 145px;
+    left: 15px;
+    bottom: 30px;
+    border-radius: 6px;
+>>>>>>> master
     background-color: #fff;
     z-index: 999;
     .headImg {
       float: left;
+<<<<<<< HEAD
       width: 100%;
       height: 135px;
       object-fit: cover;
+=======
+      width: 130px;
+      height: 70px;
+      margin: 15px 10px 10px 10px;
+      border-radius: 6px;
+>>>>>>> master
     }
     .content {
       position: relative;
       float: left;
+<<<<<<< HEAD
       width: 100%;
       height: 50px;
       h5 {
@@ -1714,12 +1797,23 @@ li {
         padding-left: 10px;
         line-height: 50px;
         font-size: 15px;
+=======
+      width: calc(100% - 150px);
+      height: 95px;
+      h5 {
+        float: left;
+        width: 85%;
+        margin-top: 18px;
+        margin-bottom: 10px;
+        font-size: 17px;
+>>>>>>> master
         word-break: break-all;
         text-overflow: ellipsis;
         display: -webkit-box; /** 将对象作为伸缩盒子模型显示 **/
         -webkit-box-orient: vertical; /** 设置或检索伸缩盒对象的子元素的排列方式 **/
         -webkit-line-clamp: 1; /** 显示的行数 **/
         overflow: hidden; /** 隐藏超出的内容 **/
+<<<<<<< HEAD
         i {
           margin-right: 6px;
           color: $ThemeRed;
@@ -1735,20 +1829,51 @@ li {
         font-size: 13px;
         color: $ThemeRed;
         text-align: right;
+=======
+      }
+      p {
+        float: left;
+        width: 70%;
+        font-size: 12px;
+        color: #aaa;
+>>>>>>> master
         word-break: break-all;
         text-overflow: ellipsis;
         display: -webkit-box; /** 将对象作为伸缩盒子模型显示 **/
         -webkit-box-orient: vertical; /** 设置或检索伸缩盒对象的子元素的排列方式 **/
+<<<<<<< HEAD
         -webkit-line-clamp: 1; /** 显示的行数 **/
         overflow: hidden; /** 隐藏超出的内容 **/
         i {
           margin-right: 6px;
           font-size: 18px;
         }
+=======
+        -webkit-line-clamp: 2; /** 显示的行数 **/
+        overflow: hidden; /** 隐藏超出的内容 **/
+      }
+      a {
+        position: absolute;
+        display: inline-block;
+        height: 95px;
+        right: 5px;
+        color: rgb(70, 184, 124);
+        font-size: 14px;
+        line-height: 100px;
+      }
+    }
+    @media (max-width: 350px) {
+      .headImg {
+        width: 100px;
+      }
+      .content {
+        width: calc(100% - 120px);
+>>>>>>> master
       }
     }
     .bottom {
       float: left;
+<<<<<<< HEAD
       width: calc(100% - 20px);
       height: 50px;
       margin-left: 10px;
@@ -1777,10 +1902,33 @@ li {
       position: absolute;
       width: 20px;
       right: 5px;
+=======
+      width: calc(100% - 24px);
+      height: 50px;
+      margin-left: 12px;
+      border-top: solid 1px #eee;
+      a {
+        display: inline-block;
+        width: 100px;
+        height: 36px;
+        color: #fff;
+        margin: 7px calc(50% - 50px);
+        line-height: 36px;
+        text-align: center;
+        border-radius: 50px;
+        background-color: rgb(70, 184, 124);
+      }
+    }
+    .back {
+      position: absolute;
+      width: 20px;
+      right: 2px;
+>>>>>>> master
       top: 5px;
       z-index: 999;
     }
   }
+<<<<<<< HEAD
   .top_button {
     width: 100%;
     height: 100vh;
@@ -1830,6 +1978,8 @@ li {
     }
 
   }
+=======
+>>>>>>> master
   #panel {
     position: fixed;
     background-color: white;
@@ -1853,22 +2003,41 @@ li {
   .list {
     float: left;
     width: 100%;
+<<<<<<< HEAD
     ul {
       float: left;
       width: 100%;
       padding: 0;
+=======
+    padding-top: 20px;
+    ul {
+      float: left;
+      width: 100%;
+      padding: 0 10px;
+>>>>>>> master
       margin: 0;
       li {
         float: left;
         width: 100%;
+<<<<<<< HEAD
         height: 116px;
         background-color: #fff;
         border-bottom: solid 1px #eee;
+=======
+        height: 102px;
+        margin-bottom: 8px;
+        box-shadow: 0 0 4px #ccc;
+        background-color: #fff;
+>>>>>>> master
         img {
           float: left;
           width: 56px;
           height: 82px;
+<<<<<<< HEAD
           margin: 15px 15px;
+=======
+          margin: 10px 12px;
+>>>>>>> master
           object-fit: cover;
         }
         .content {
@@ -1878,7 +2047,11 @@ li {
           h5 {
             float: left;
             width: 100%;
+<<<<<<< HEAD
             margin-top: 19px;
+=======
+            margin-top: 14px;
+>>>>>>> master
             font-size: 16px;
           }
           p {
@@ -1989,9 +2162,12 @@ li {
         outline: none;
       }
     }
+<<<<<<< HEAD
     .opinion_input {
       margin-top: 5px;
     }
+=======
+>>>>>>> master
   }
   .photo {
     float: left;
@@ -2183,12 +2359,21 @@ li {
         width: 100%;
         height: 70px;
         border-bottom: solid 1px #eee;
+<<<<<<< HEAD
         &.active {
           div {
             background-color: $ThemeRed;
           }
         }
         &:last-child {
+=======
+        &.active{
+          div{
+            background-color: $ThemeRed;
+          }
+        }
+        &:last-child{
+>>>>>>> master
           border: none;
         }
         p {
@@ -2216,7 +2401,11 @@ li {
         }
       }
     }
+<<<<<<< HEAD
     .bottom {
+=======
+    .bottom{
+>>>>>>> master
       float: left;
       width: 100%;
       padding: 0 12px;
@@ -2259,6 +2448,7 @@ li {
   width: 100%;
   min-height: 100vh;
   background-color: #fff;
+<<<<<<< HEAD
   .img {
     position: relative;
     float: left;
@@ -2284,15 +2474,24 @@ li {
     }
   }
   .top {
+=======
+  .top{
+>>>>>>> master
     float: left;
     width: 100%;
     padding: 12px 25px;
     font-size: 16px;
     line-height: 22px;
     letter-spacing: 2px;
+<<<<<<< HEAD
     //font-family: "方正舒体";
   }
   .content {
+=======
+    font-family: "方正舒体";
+  }
+  .content{
+>>>>>>> master
     float: left;
     width: calc(100% - 70px);
     margin: 15px 35px;
@@ -2301,30 +2500,50 @@ li {
     display: flex;
     flex-direction: column;
     align-items: center;
+<<<<<<< HEAD
     h5 {
+=======
+    h5{
+>>>>>>> master
       font-size: 13px;
       margin-top: 30px;
       color: #444;
     }
+<<<<<<< HEAD
     p {
+=======
+    p{
+>>>>>>> master
       width: 80%;
       color: #999;
       margin-top: 10px;
       font-size: 13px;
       line-height: 22px;
       text-align: center;
+<<<<<<< HEAD
       span {
+=======
+      span{
+>>>>>>> master
         font-size: 32px;
         color: #333;
       }
     }
+<<<<<<< HEAD
     .operation {
+=======
+    .operation{
+>>>>>>> master
       float: left;
       width: 100%;
       height: 56px;
       margin-top: 15px;
       border-top: dashed 1px #ddd;
+<<<<<<< HEAD
       a {
+=======
+      a{
+>>>>>>> master
         float: left;
         display: inline-block;
         width: 50%;
@@ -2333,10 +2552,17 @@ li {
         font-size: 13px;
         text-align: center;
         line-height: 50px;
+<<<<<<< HEAD
         &:first-child {
           width: 48%;
         }
         img {
+=======
+        &:first-child{
+          width: 48%;
+        }
+        img{
+>>>>>>> master
           width: 18px;
           margin-top: -2px;
           margin-right: 5px;
@@ -2350,12 +2576,20 @@ li {
 
 /*我的押金*/
 
+<<<<<<< HEAD
 .myDeposit {
+=======
+.myDeposit{
+>>>>>>> master
   float: left;
   width: 100%;
   height: 100vh;
   background-color: $BgColor;
+<<<<<<< HEAD
   .title {
+=======
+  .title{
+>>>>>>> master
     float: left;
     width: 100%;
     height: 40px;
@@ -2363,15 +2597,23 @@ li {
     line-height: 40px;
     font-size: 15px;
   }
+<<<<<<< HEAD
   .content {
     position: relative;
+=======
+  .content{
+>>>>>>> master
     float: left;
     width: calc(100% - 30px);
     height: 160px;
     margin: 0 15px;
     border-radius: 6px;
     background-color: $ThemeRed;
+<<<<<<< HEAD
     p {
+=======
+    p{
+>>>>>>> master
       float: left;
       width: 50%;
       height: 140px;
@@ -2381,6 +2623,7 @@ li {
       text-align: center;
       line-height: 160px;
     }
+<<<<<<< HEAD
     span {
       position: absolute;
       left: 20px;
@@ -2389,6 +2632,9 @@ li {
       font-size: 15px;
     }
     .img {
+=======
+    .img{
+>>>>>>> master
       float: right;
       width: 100px;
       height: 100px;
@@ -2396,13 +2642,22 @@ li {
       text-align: center;
       line-height: 100px;
       border-radius: 50%;
+<<<<<<< HEAD
       background-color: rgba(230, 230, 230, 0.2);
       img {
+=======
+      background-color: rgba(230,230,230,0.2);
+      img{
+>>>>>>> master
         width: 40px;
       }
     }
   }
+<<<<<<< HEAD
   a {
+=======
+  a{
+>>>>>>> master
     float: right;
     color: #999;
     margin-top: 15px;
@@ -2414,13 +2669,21 @@ li {
 
 /*我的阅读币*/
 
+<<<<<<< HEAD
 .myReadB {
+=======
+.myReadB{
+>>>>>>> master
   position: relative;
   float: left;
   width: 100%;
   min-height: 100vh;
   background-color: #fff;
+<<<<<<< HEAD
   .content {
+=======
+  .content{
+>>>>>>> master
     float: left;
     width: calc(100% - 24px);
     height: 150px;
@@ -2429,7 +2692,11 @@ li {
     border-radius: 6px;
     background-color: $ThemeRed;
     box-shadow: 0 0 2px #ccc;
+<<<<<<< HEAD
     h5 {
+=======
+    h5{
+>>>>>>> master
       float: left;
       width: 50%;
       height: 100px;
@@ -2438,7 +2705,11 @@ li {
       font-size: 16px;
       line-height: 100px;
     }
+<<<<<<< HEAD
     span {
+=======
+    span{
+>>>>>>> master
       display: inline-block;
       float: right;
       width: 50%;
@@ -2454,7 +2725,11 @@ li {
     position: absolute;
     width: 100%;
     top: 115px;
+<<<<<<< HEAD
     box-shadow: 0 -10px 10px rgba(240, 90, 70, 0.2);
+=======
+    box-shadow: 0 -10px 10px rgba(240,90,70,0.2);
+>>>>>>> master
     background-color: #fff;
     .title {
       float: left;
@@ -2524,7 +2799,13 @@ li {
   .question {
     float: left;
     width: 100%;
+<<<<<<< HEAD
     background-color: #fff;
+=======
+    padding: 0 18px 10px 18px;
+    background-color: #fff;
+    box-shadow: 0 1px 2px #ccc;
+>>>>>>> master
     .title {
       float: left;
       width: 100%;
@@ -2536,6 +2817,7 @@ li {
       float: left;
       width: 100%;
       margin-top: 5px;
+<<<<<<< HEAD
       //a {
       //  display: inline-block;
       //  float: left;
@@ -2582,12 +2864,30 @@ li {
             line-height: 51px;
             color: #bbb;
           }
+=======
+      a {
+        display: inline-block;
+        float: left;
+        height: 30px;
+        padding: 0 22px;
+        margin-right: 26px;
+        margin-bottom: 16px;
+        color: #888;
+        font-size: 14px;
+        text-align: center;
+        line-height: 30px;
+        border-radius: 20px;
+        background-color: rgb(242, 242, 242);
+        &:last-child {
+          margin-right: 0;
+>>>>>>> master
         }
       }
     }
   }
   > a {
     display: inline-block;
+<<<<<<< HEAD
     position: fixed;
     width: 100%;
     height: 44px;
@@ -2601,11 +2901,30 @@ li {
     background-color: #fff;
     i {
       margin-right: 4px;
+=======
+    float: left;
+    width: calc(100% - 130px);
+    height: 44px;
+    margin-left: 65px;
+    margin-top: 150px;
+    color: #fff;
+    font-size: 16px;
+    text-align: center;
+    line-height: 44px;
+    letter-spacing: 2px;
+    border-radius: 30px;
+    background-color: $ThemeRed;
+    img {
+      width: 30px;
+      margin-top: -4px;
+      margin-right: 6px;
+>>>>>>> master
     }
   }
 }
 
 /*常见问题*/
+<<<<<<< HEAD
 
 /*帮助与反馈*/
 
@@ -3071,3 +3390,5 @@ li {
 }
 
 /*图书点评*/
+=======
+>>>>>>> master

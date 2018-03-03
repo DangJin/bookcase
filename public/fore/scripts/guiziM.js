@@ -21,7 +21,11 @@ require(['jquery', 'F', 'bookCase'], function ($, F, bookCase) {
   $(function () {
     // 全局存储用户id
     var options = {
+<<<<<<< HEAD
       case_id: ''
+=======
+      case_id: '1'
+>>>>>>> master
     }
 
     initDom()
@@ -33,7 +37,10 @@ require(['jquery', 'F', 'bookCase'], function ($, F, bookCase) {
     })
 
     function initDom () {
+<<<<<<< HEAD
       options.case_id = F.getUrlParams('caseid')
+=======
+>>>>>>> master
     }
 
   })

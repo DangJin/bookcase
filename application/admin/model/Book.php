@@ -38,8 +38,8 @@ class Book extends Common
         }
         $data['buyout'] = (int)$data['price'] * (int)$data['sacle'];
 
-//        $data['create_user'] = session('sId');
-//        $data['modify_user'] = session('sId');
+        $data['create_user'] = session('sId');
+        $data['modify_user'] = session('sId');
 
         $this->startTrans();
         try {
@@ -83,6 +83,9 @@ class Book extends Common
             return returnJson(602, 400, '没有此书');
         }
 
+        $book->inventory += $data['num'];
+        $book->isUpdate(true)->save();
+        
         $tmpData = [
             'name' => $book->getAttr('title'),
             'author' => $book->getAttr('author'),
@@ -92,7 +95,8 @@ class Book extends Common
         $result = $books->insertAll($this->createBooks($tmpData, (int)$data['num']));
         if (false === $result)
             return returnJson(603, 400, $books->getError());
-        return returnJson(702, 200, '添加成功');
+
+        return returnJson(702, 200, $book->toArray());
     }
 
     private function createBooks($data, $num)

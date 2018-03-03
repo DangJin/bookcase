@@ -41,6 +41,7 @@ require(['jquery', 'F', 'bookCase'], function ($, F, bookCase) {
           }
         })
 
+<<<<<<< HEAD
         var object = {
           'type': 'msg',
           'id': '01020304',
@@ -60,6 +61,11 @@ require(['jquery', 'F', 'bookCase'], function ($, F, bookCase) {
         $('.productM_bottom>a').eq(0).click(function () {
           bookCase.addMyWant(options, function (res) {
             alert(res)
+=======
+
+        $('.productM_bottom>a').eq(0).click(function () {
+          bookCase.addMyWant(options, function (res) {
+>>>>>>> master
             console.log(res)
           })
         })

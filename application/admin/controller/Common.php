@@ -36,10 +36,10 @@ class Common extends Controller
     public function add(Request $request)
     {
         if ($request->isPost()) {
-//            if (!$request->has('csrf', 'header', true) || $request->header('csrf') != session('csrf')) {
-//                return returnJson(600, 400, '表单token验证失败');
-//            }
-//            session('csrf', md5($_SERVER['REQUEST_TIME_FLOAT']));
+            if (!$request->has('csrf', 'header', true) || $request->header('csrf') != session('csrf')) {
+                return returnJson(600, 400, '表单token验证失败');
+            }
+            session('csrf', md5($_SERVER['REQUEST_TIME_FLOAT']));
             return $this->model->add($request->param());
         }
     }
@@ -59,5 +59,19 @@ class Common extends Controller
         return $this->model->del($request->param());
     }
 
+    public function getcsrf()
+    {
+        if (!session('?csrf')) {
+            $csrf = md5($_SERVER['REQUEST_TIME_FLOAT']);
+            session('csrf', $csrf);
+        }
+        return json([
+            'value' => true,
+            'data' => [
+                'message' => '返回csrf',
+                'csrf' => session('csrf')
+            ]
+        ]);
+    }
 
 }

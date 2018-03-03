@@ -2,14 +2,14 @@
 /**
  * Created by PhpStorm.
  * User: wry
- * Date: 18/1/29
- * Time: 下午7:58
+ * Date: 18/3/2
+ * Time: 下午3:41
  */
 
 namespace app\admin\model;
 
 
-class PointRule extends Common
+class Issue extends Common
 {
 
 }

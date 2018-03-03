@@ -9,12 +9,24 @@
 namespace app\admin\controller;
 
 
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\QrCode;
+use think\Db;
+
 class Test
 {
-    public function test(){
-        $a = ['wang' => 1];
-        $b = ['zhang' => 2];
-        $c = array_merge($a, $b);
-        dump($c);
+    public function test()
+    {
+
+        $result = Db::table('book')->alias('b')->where('title', 'like', '123'.'%')
+            ->join('drawer d', 'd.book=b.id')
+            ->join('bookcase bc', 'bc.id=d.pid')
+            ->field('bc.*');
+        return json($result);
+    }
+
+    public function createQrcode()#$filename, $data)
+    {
+
     }
 }
