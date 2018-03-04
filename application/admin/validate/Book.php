@@ -16,14 +16,15 @@ class Book extends Validate
     protected $rule = [
         'title' => 'require',
         'type' => 'require',
-        'isbn' => 'require',
+        'isbn' => 'require|unique:book',
         'inventory' => 'number',
     ];
 
     protected $message = [
         'title.require'  =>  '书名不能为空',
-        'type.unique'  =>  '类型已存在',
+        'type.require'  =>  '类型已存在',
         'isbn.require' => 'isbn不能为空',
+        'isbn.unique' => '此书已存在',
         'inventory.number' => '库存量必须为整数',
     ];
 

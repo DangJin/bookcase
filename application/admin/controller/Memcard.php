@@ -13,7 +13,7 @@ use think\Request;
 
 class Memcard extends Common
 {
-    private $model;
+    protected $model;
 
     public function __construct(Request $request = null)
     {

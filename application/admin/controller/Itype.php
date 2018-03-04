@@ -2,8 +2,8 @@
 /**
  * Created by PhpStorm.
  * User: wry
- * Date: 18/3/2
- * Time: 下午3:42
+ * Date: 18/3/3
+ * Time: 下午4:42
  */
 
 namespace app\admin\controller;
@@ -11,13 +11,13 @@ namespace app\admin\controller;
 
 use think\Request;
 
-class Issue extends Common
+class Itype extends Common
 {
     protected $model;
 
     public function __construct(Request $request = null)
     {
         parent::__construct($request);
-        $this->model = new \app\admin\model\Issue();
+        $this->model = new \app\admin\model\Itype();
     }
 }

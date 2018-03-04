@@ -78,11 +78,10 @@ class Book extends Common
             return returnJson(602, 400, '数量为整数且不超过1000');
         }
 
-        $book = $this->where('id', $data['id'])->field('title,author,press')->find();
+        $book = $this->where('id', $data['id'])->field('title,author,press,id,inventory')->find();
         if (is_null($book)) {
             return returnJson(602, 400, '没有此书');
         }
-
         $book->inventory += $data['num'];
         $book->isUpdate(true)->save();
         

@@ -13,7 +13,7 @@ use think\Request;
 
 class CoinRecord extends Common
 {
-    private $model;
+    protected $model;
 
     public function __construct(Request $request = null)
     {
@@ -21,5 +21,10 @@ class CoinRecord extends Common
         $this->model = new \app\admin\model\CoinRecord();
     }
 
-    public function 
+    public function getDetails(Request $request)
+    {
+        $limit = $request->has('limit', 'param', true) ?  $request->param('limit') : 10;
+        $page = $request->has('page', 'param', true) ?  $request->param('page') : 1;
+        return $this->model->getDetails($page, $limit);
+    }
 }
