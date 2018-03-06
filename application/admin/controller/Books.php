@@ -25,5 +25,8 @@ class Books extends Common
 
     public function update(Request $request) {}
 
-    public function select(Request $request) {}
+    public function delall(Request $request)
+    {
+        return $this->model->delall($request->param());
+    }
 }

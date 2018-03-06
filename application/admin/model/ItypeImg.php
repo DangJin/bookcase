@@ -18,7 +18,7 @@ class ItypeImg extends Common
             return returnJson(604, 400, '缺少删除参数');
         }
 
-        $img = BanImg::get($data['ids']);
+        $img = ItypeImg::get($data['ids']);
         if (!is_null($img)) {
             unlink($img->getAttr('path'));
             $img->delete();

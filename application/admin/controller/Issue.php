@@ -20,4 +20,5 @@ class Issue extends Common
         parent::__construct($request);
         $this->model = new \app\admin\model\Issue();
     }
+
 }

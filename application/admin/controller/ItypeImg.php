@@ -23,23 +23,19 @@ class ItypeImg extends Common
 
     public function add(Request $request)
     {
-        if (!$request->has('itid', 'param', true)) {
-            return returnJson(603, 400, '缺少问题类型ID');
-        }
         $file = $request->file('img');
         $data = [];
         if ($file) {
             $info = $file->move(ROOT_PATH . 'public' . DS . 'uploads');
             if ($info) {
                 $data['path'] = ROOT_PATH . 'public' . DS . 'uploads' . DS . $info->getSaveName();
-                $data['imgurl'] = $request->host(). DS . 'images' . DS . $info->getSaveName();
-                $data['itid'] = $request->param('itid');
+                $data['imgurl'] = DS . DS . $request->host(). DS . 'images' . DS . $info->getSaveName();
             } else {
-                return returnJson(609, 400, '上传失败');
+                return returnJson(609, 400, $info->getError());
             }
             return $this->model->add($data);
         } else {
-            return returnJson(609, 400, $file->getError());
+            return returnJson(609, 400, '没有上传图片');
         }
     }
 
