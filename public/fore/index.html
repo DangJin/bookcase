@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>调试界面</title>
+    <title>微信支付测试</title>
     <meta name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1, user-scalable=no">
     <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
@@ -12,136 +12,263 @@
             margin: 0 auto;
         }
 
+        .Pay {
+            float: left;
+            width: 100vw;
+            min-height: 100vh;
+            background-color: #fff;
+        }
+
+        .Pay .title {
+            float: left;
+            width: 100%;
+            height: 40px;
+            line-height: 45px;
+            text-indent: 20px;
+            font-size: 16px;
+        }
+
         #pay {
-            background-color: #1AAD19;
-            position: relative;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-            padding-left: 14px;
-            padding-right: 14px;
-            box-sizing: border-box;
-            font-size: 18px;
+            position: fixed;
+            display: inline-block;
+            width: calc(100% - 70px);
+            height: 42px;
+            left: 35px;
+            bottom: 40px;
             text-align: center;
-            text-decoration: none;
-            color: #FFFFFF;
-            line-height: 2.55555556;
-            border-radius: 5px;
-            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-            overflow: hidden;
+            line-height: 42px;
+            color: #fff;
+            border-radius: 6px;
+            background-color: #1AAD19;
+        }
+
+        .payList {
+            float: left;
+            width: calc(100% - 40px);
+            margin: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 5px #ccc;
+        }
+
+        .payList h5 {
+            position: relative;
+            float: left;
+            width: 100%;
+            height: 36px;
+            margin: 0;
+            color: #333;
+            text-indent: 12px;
+            line-height: 36px;
+            border-bottom: solid 1px #eee;
+        }
+
+        .payList h5 span {
+            position: absolute;
+            display: inline-block;
+            height: 36px;
+            right: 0;
+            top: 0;
+            color: rgb(250, 70, 50);
+            line-height: 36px;
+            padding-right: 12px;
+        }
+
+        .payList ul {
+            float: left;
+            width: 100%;
+            padding: 10px 0;
+            margin: 0;
+        }
+
+        .payList ul li {
+            position: relative;
+            float: left;
+            width: 100%;
+            height: 24px;
+            list-style: none;
+        }
+
+        .payList ul li p {
+            float: left;
+            width: 100%;
+            height: 24px;
+            margin: 0;
+            color: #666;
+            font-size: 13px;
+            text-indent: 12px;
+            line-height: 24px;
+        }
+
+        .payList ul li span {
+            position: absolute;
+            display: inline-block;
+            height: 24px;
+            right: 0;
+            top: 0;
+            color: #999;
+            font-size: 12px;
+            line-height: 24px;
+            padding-right: 12px;
         }
 
     </style>
 </head>
 <body>
-<button id="pay" ONCLICK="getPayConfig()">微信支付</button>
+<div class="Pay">
+    <div class="title">支付订单</div>
+    <div class="payList">
+        <h5>支付金额 <span>0.01元</span></h5>
+        <ul>
+            <li><p>当前状态</p><span id="pay_status">暂未支付</span></li>
+            <li><p>商品</p><span>微信测试支付</span></li>
+        </ul>
+    </div>
+    <a id="pay">微信支付</a>
+</div>
 </body>
 </html>
 <script type="text/javascript">
     $(document).ready(function () {
-        // wxLogin()
-        init()
+        wxLogin(function (data) {
+            // 开始其他业务逻辑
+            var openId = data.id;
+            var userId = data.uid;
+            // 支付业务逻辑
+            $("#pay").click(function () {
+                initJssdk(function (status) {
+                    if (status) {
+                        var body = "订单测试";
+                        var total_fee = 1;
+                        orderUnify(body, total_fee, openId, function (prepay_id) {
+                            wxPay(prepay_id)
+                        })
+                    }
+                })
+            });
+        });
     });
-    // function getUrlParam(name) {
-    //     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-    //     var r = window.location.search.substr(1).match(reg);
-    //     if (r != null) return unescape(r[2]);
-    //     return null;
-    // }
-    //
-    // function wxLogin(callback) {
-    //     var appId = 'wx33584f71b4a84fa9';
-    //     var oauth_url = 'http://tpbook.codwiki.cn/weixin/oauth';
-    //     var url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + appId + "&redirect_uri=" + location.href.split('#')[0] + "&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect"
-    //     var code = getUrlParam("code");
-    //     if (!code) {
-    //         window.location = url;
-    //     } else {
-    //         $.ajax({
-    //             type: 'GET',
-    //             url: oauth_url,
-    //             dataType: 'json',
-    //             data: {
-    //                 code: code
-    //             },
-    //             success: function (data) {
-    //                 if (data.code === 200) {
-    //                     callback(data.data)
-    //                 }
-    //             },
-    //             error: function (error) {
-    //                 throw new Error(error)
-    //             }
-    //         })
-    //     }
-    // }
 
-    //
-    // var wxlogin = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx33584f71b4a84fa9&redirect_uri='
-    //     + window.location.href + '&response_type=code&scope=snsapi_userinfo&state=1#wechat_redirect';
-    // if (!getUrlParam('code')) {
-    //     window.location = wxlogin;
-    // }
-    // console.log(getUrlParam('code'));
-    // $.ajax({
-    //     //请求方式
-    //     type: 'POST',
-    //     //发送请求的地址
-    //     url: 'http://tpbook.codwiki.cn/weixin/wxconfig',
-    //     //服务器返回的数据类型
-    //     dataType: 'json',
-    //     //发送到服务器的数据，对象必须为key/value的格式，jquery会自动转换为字符串格式
-    //     data: {
-    //         jsApiList: "openLocation",
-    //         debug: 1,
-    //         url: location.href.split('#')[0]
-    //     },
-    //     success: function (data) {
-    //         //请求成功函数内容
-    //         wx.config(data.data);
-    //         wx.ready(function () {
-    //             wx.openLocation({
-    //                 latitude: 23.099994,
-    //                 longitude: 113.324520,
-    //                 name: 'TIT 鍒涙剰鍥�',
-    //                 address: '骞垮窞甯傛捣鐝犲尯鏂版腐涓矾 397 鍙�',
-    //                 scale: 14,
-    //                 infoUrl: 'http://weixin.qq.com'
-    //             });
-    //         });
-    //
-    //     },
-    //     error: function (error) {
-    //         //请求失败函数内容
-    //         console.log(error)
-    //     }
-    // });
-    // 微信网页授权
-    // wx33584f71b4a84fa9
+    /**
+     * 获取 URL 参数
+     * @param name
+     * @returns {*}
+     */
+    function getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return null;
+    }
 
-    function init() {
+    /**
+     * 微信登录
+     * @param callback
+     */
+    function wxLogin(callback) {
+        var appId = 'wx5c1a89ec7428682c';
+        var oauth_url = 'http://tpbook.codwiki.cn/weixin/oauth';
+        var url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + appId + "&redirect_uri=" + location.href.split('#')[0] + "&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect"
+        var isLogin = sessionStorage.getItem("user");
+        var code = getUrlParam("code");
+        if (!code) {
+            window.location = url;
+        } else {
+            if (isLogin) {
+                var _user = JSON.parse(isLogin);
+                var user = {
+                    id: _user.openId,
+                    uid: _user.userId
+                };
+                callback(user);
+            } else {
+                $.ajax({
+                    type: 'GET',
+                    url: oauth_url,
+                    dataType: 'json',
+                    data: {
+                        code: code
+                    },
+                    success: function (data) {
+                        if (data.code === 200) {
+                            // 做本地存储
+                            var user = {
+                                userId: data.data.uid, openId: data.data.id
+                            };
+                            sessionStorage.setItem("user", JSON.stringify(user));
+                            callback(data.data)
+                        }
+                    },
+                    error: function (error) {
+                        console.log(error)
+                    }
+                })
+            }
+        }
+    }
+
+    /**
+     * 初始化 weixin-js-sdk
+     * @param callback
+     */
+    function initJssdk(callback) {
         $.ajax({
             type: 'POST',
             url: 'http://tpbook.codwiki.cn/weixin/wxconfig',
             dataType: 'json',
             data: {
                 jsApiList: "openLocation,chooseWXPay",
-                debug: 1,
+                debug: 0,
                 url: location.href.split('#')[0]
             },
             success: function (data) {
                 wx.config(data.data);
+                callback(true)
             },
             error: function (error) {
-                console.log(error)
+                callback(false)
             }
         });
     }
 
-    function getPayConfig() {
+    /**
+     * 统一下单
+     * @param body
+     * @param total_fee
+     * @param openid
+     * @param callback
+     */
+    function orderUnify(body, total_fee, openid, callback) {
         $.ajax({
             type: 'GET',
+            url: 'http://tpbook.codwiki.cn/wxpay/order',
+            dataType: 'json',
+            data: {
+                body: body,
+                openid: openid,
+                total_fee: total_fee
+            },
+            success: function (data) {
+                if (data.code === 200) {
+                    callback(data.data.prepay_id)
+                }
+            },
+            error: function (error) {
+                $("body").append(error)
+            }
+        });
+    }
+
+    /**
+     * 微信支付
+     * @param prepay_id
+     */
+    function wxPay(prepay_id) {
+        $.ajax({
+            type: 'POST',
             url: 'http://tpbook.codwiki.cn/wxpay/payConfig',
+            data: {
+                prepayId: prepay_id
+            },
             dataType: 'json',
             success: function (data) {
                 var config = data.data;
@@ -153,19 +280,16 @@
                         signType: config['signType'],
                         paySign: config['paySign'], // 支付签名
                         success: function (res) {
-                            $("body").append(res)
-                        }, error: function (error) {
-                            $("body").append(error)
+                            $("#pay_status").text("支付成功");
+                        }, fail: function (error) {
+                            $("body").append(error.errMsg)
                         }
                     })
                 });
-
             },
             error: function (error) {
-                $("body").append(error.toString())
+                $("body").append(error.errMsg)
             }
         });
     }
-
-    // 微信支付
 </script>

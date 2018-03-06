@@ -52,7 +52,8 @@
 \think\Route::group(
     'util', [
         'sendCode'          => ['util/alidayu/sendCode', ['method' => 'post']],
-        'getBookInfo'          => ['util/douban/getBookByIsbn', ['method' => 'get']],
+        'getBookInfo'       => ['util/douban/getBookByIsbn',
+                                ['method' => 'get']],
         'status/getAlidayu' => [
             'util/globalStatus/getAlidayu',
             ['method' => 'GET'],
@@ -73,7 +74,9 @@
 \think\Route::group(
     'wxpay', [
         'init'      => ['wxpay/index/index', ['method' => 'GET']],
-        'payConfig' => ['wxpay/Jssdk/getJssdk', ['method' => 'GET']],
+        'payConfig' => ['wxpay/Jssdk/getJssdk', ['method' => 'POST']],
+        'order'     => ['wxpay/Order/orderUnify', ['method' => 'GET']],
+        'notice'    => ['wxpay/Order/notice', ['method' => 'POST ']],
     ]
 );
 
