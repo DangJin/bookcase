@@ -3,7 +3,7 @@
 return [
     'wxconfig' => [
         // 必要配置
-        'app_id'    => 'wx33584f71b4a84fa9',
+        'app_id'    => 'wx5c1a89ec7428682c',
         'mch_id'    => '1489798132',
         'key'       => 'fpvViHnqRyvibVRnj7YyGgJc5cr6TQUy',   // API 密钥
         'cert_path' => '/home/wwwroot/tpbook.codwiki.cn/apiclient_cert.pem', // XXX: 绝对路径！！！！

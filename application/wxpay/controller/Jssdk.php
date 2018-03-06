@@ -16,13 +16,10 @@ class Jssdk extends Common
     /**
      * @return \think\response\Json
      */
-    public function getJssdk()
+    public function getJssdk(Request $request)
     {
-        $jssdk = $this->payment->jssdk;
-        // 生成订单号
-        $prepayId = date('Ymd').str_pad(
-                mt_rand(1, 99999), 5, '0', STR_PAD_LEFT
-            );
+        $prepayId = $request->param('prepayId');
+        $jssdk    = $this->payment->jssdk;
 
         return returnJson(200, 200, $jssdk->sdkConfig($prepayId));
     }

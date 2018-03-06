@@ -33,7 +33,6 @@ class Oauth extends Controller
         $this->app = Factory::officialAccount($this->wxConfig);
     }
 
-
     /**
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
@@ -46,17 +45,17 @@ class Oauth extends Controller
         }
         $oauth = $this->app->oauth;
         $user  = $oauth->user();
-        // 业务逻辑
-        session('wx_user', $user->toArray());
-        $this->getUserId($user);
+        $uid   = $this->getUserId($user);
+        $user_arr        = $user->toArray();
+        $user_arr['uid'] = $uid;
 
-        // 其他业务逻辑
-        return returnJson(200, 200, $user->toArray());
+        return returnJson(200, 200, $user_arr);
     }
 
     /**
      * @param \Overtrue\Socialite\User $user
      *
+     * @return mixed|string
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
@@ -68,7 +67,7 @@ class Oauth extends Controller
         if ( ! empty($openid)) {
             $_user = Db::table('user')->where('openid', $openid)->find();
             if ( ! empty($_user)) {
-                session('user_id', $_user['id']);
+                return $_user['id'];
             } else {
                 $data = [
                     'openid'  => $openid,
@@ -79,7 +78,7 @@ class Oauth extends Controller
 
                 $res = Db::table('user')->insert($data);
                 if ($res === 1) {
-                    session('user_id', Db::name('user')->getLastInsID());
+                    return Db::name('user')->getLastInsID();
                 }
             }
 
