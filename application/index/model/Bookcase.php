@@ -72,7 +72,7 @@ class Bookcase extends Common
         if ( ! empty($case)) {
             // 查询书柜下所有抽屉下图书
             $drawers = $this->hasMany('drawer', 'pid')
-                ->join('books', 'books.pid=drawer.id')
+                ->join('books', 'books.id=drawer.bid')
                 ->join('book', 'book.id=books.pid')
                 ->where('drawer.pid', $case->getAttr('id'))
                 //                ->field(

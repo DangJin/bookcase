@@ -57,18 +57,6 @@ class Order extends Common
             return returnJson(900, 400, '订单类型不能为空');
         }
 
-        if (empty($data['cid'])) {
-            return returnJson(900, 400, '金额Id不能为空');
-        }
-
-        $config = \app\admin\model\Config::get($data['cid']);
-
-        if (is_null($config) || $config->getAttr('type') != 'Recharge') {
-            return returnJson(603, 400, '金额id错误');
-        }
-
-        $data['amount'] = $config->getAttr('body');
-
         $data['create_user'] = $data['uid'];
         $data['modify_user'] = $data['uid'];
         $data['number'] = 'Ti' . strtotime('now');
@@ -82,6 +70,16 @@ class Order extends Common
         //H  8:提现
         switch ($data['type']) {
             case '1':
+                if (empty($data['cid'])) {
+                    return returnJson(900, 400, '押金Id不能为空');
+                }
+
+                $config = \app\admin\model\Config::get($data['cid']);
+
+                if (is_null($config) || $config->getAttr('type') != 'DEPOSIT') {
+                    return returnJson(603, 400, '押金id错误');
+                }
+                $data['amount'] = explode(',',$config->getAttr('body'))[0];
                 $data['number'] = $data['number'] . 'A';
                 break;
 //            case '2':
@@ -100,6 +98,16 @@ class Order extends Common
                 $data['number'] = $data['number'] . 'D';
                 break;
             case '5':
+                if (empty($data['cid'])) {
+                    return returnJson(900, 400, '金额Id不能为空');
+                }
+
+                $config = \app\admin\model\Config::get($data['cid']);
+
+                if (is_null($config) || $config->getAttr('type') != 'RECHARGE') {
+                    return returnJson(603, 400, '金额id错误');
+                }
+                $data['amount'] = $config->getAttr('body');
                 $data['number'] = $data['number'] . 'E';
                 break;
             case '6':
@@ -126,8 +134,9 @@ class Order extends Common
         if ($result === false) {
             return returnJson(900, 400, '生成订单失败');
         }
-
-        return returnJson(900, 200, '生成订单');
+        $tmp = $this->toArray();
+        $tmp['open_id'] = $user->getAttr('openid');
+        return returnJson(900, 200, $tmp);
     }
 
     private function num2str($num,$length)
@@ -149,22 +158,27 @@ class Order extends Common
         return $randkey;
     }
 
-    public function compOrder($data)
+    public function compOrder($number, $openid, $wxno)
     {
-        if (empty($data['number'])) {
+        if (empty($number)) {
             return returnJson(606, 400, '缺少订单编号');
         }
 
-        if (empty($data['uid'])) {
+        if (empty($openid)) {
             return returnJson(606, 400, '缺少用户编号');
         }
 
-        $order = $this->where('number', $data['number'])->where('uid', $data['uid'])->find();
+        $user = $this->table('user')->where('openid', $openid)->find();
+
+        if (is_null($user)) {
+            return returnJson(606, 400, '用户编号');
+        }
+
+        $order = $this->where('number', $data['number'])->where('uid', $user->getAttr('id'))->find();
 
         if (is_null($order)) {
             return returnJson(606, 400, '没有此订单');
         }
-
 
         switch ($order->getAttr('type')) {
             case '1':
@@ -179,7 +193,7 @@ class Order extends Common
 
                 break;
             case '5':
-                return $this->compChange($order);
+                return $this->compChange($order, $wxno);
                 break;
 //                case '8':
 //
@@ -231,7 +245,7 @@ class Order extends Common
         return returnJson(999, 200, '完成订单');
     }
 
-    public function compChange($order)
+    public function compChange($order, $wxno)
     {
         $user = User::get($order->getAttr('uid'));
 
@@ -243,6 +257,7 @@ class Order extends Common
             $user->change = $user->change + $order->getAttr('amount');
             $user->isUpdate(true)->save();
             $order->state = 2;
+            $order->wxno = $wxno;
             $order->isUpdate(true)->save();
             $this->commit();
         } catch (Exception $e) {

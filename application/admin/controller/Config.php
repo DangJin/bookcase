@@ -67,4 +67,19 @@ class Config extends Common
     {
         return $this->model->delRecharge($request->param());
     }
+
+    public function addDamage(Request $request)
+    {
+        return $this->model->addDamage($request->param());
+    }
+
+    public function upDamage(Request $request)
+    {
+        return $this->model->upDamage($request->param());
+    }
+
+    public function delDamage(Request $request)
+    {
+        return $this->model->delDamage($request->param());
+    }
 }

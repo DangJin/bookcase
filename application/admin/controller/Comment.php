@@ -20,4 +20,9 @@ class Comment extends Common
         parent::__construct($request);
         $this->model = new \app\admin\model\Comment();
     }
+
+    public function searchByName(Request $request)
+    {
+        return $this->model->searchByName($request->param());
+    }
 }

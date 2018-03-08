@@ -78,7 +78,7 @@ class Config extends Common
         }
 
         if (!empty($data['num'])) {
-            $config->body = $data['money'].','.$data['money'];
+            $config->body = $data['money'].','.$data['num'];
         }
         $config->modify_user = session('id');
         if (!empty($data['title'])) {
@@ -134,10 +134,10 @@ class Config extends Common
         $result = $this->save([
             'body' => $data['money'],
             'title' => '充值金额',
-            'type' => 'Recharge'
+            'type' => 'RECHARGE',
+            'create_user' => session('id'),
+            'modify_user' => session('id')
         ]);
-        $data['create_user'] = session('id');
-        $data['modify_user'] = session('id');
         if (false === $result) {
             return returnJson(603, 400, '添加失败');
         }
@@ -156,7 +156,11 @@ class Config extends Common
         }
 
         $config = Config::get($data['id']);
-        if ($config->getAttr('type') != 'Recharge') {
+        if (is_null($config)) {
+            return returnJson(603, 400, '没有这条数据');
+        }
+
+        if ($config->getAttr('type') != 'RECHARGE') {
             return returnJson(603, 400, '修改类型错误');
         }
 
@@ -179,6 +183,9 @@ class Config extends Common
         }
 
         $config = Config::get($data['id']);
+        if (is_null($config))
+            return returnJson(603, 400, '没有此数据');
+
         if ($config->getAttr('type') != 'Recharge') {
             return returnJson(603, 400, '删除类型错误');
         }
@@ -187,6 +194,82 @@ class Config extends Common
 
         return returnJson(703, 200, '删除成功');
 
+    }
+
+    public function addDamage($data)
+    {
+        if (empty($data['title'])) {
+            return returnJson(607, 400, '缺少名称');
+        }
+
+        if (empty($data['perc'])) {
+            return returnJson(607, 400, '缺少百分比');
+        }
+
+        if (empty($data['unuse'])) {
+            return returnJson(607, 400, '是否不能使用不能为空');
+        }
+
+        $result = $this->save([
+            'body' => $data['perc'].','.$data['unuse'],
+            'title' => $data['title'],
+            'type' => 'DAMAGE',
+            'create_user' => session('id'),
+            'modify_user' => session('id'),
+        ]);
+        if (false === $result) {
+            return returnJson(603, 400, '添加失败');
+        }
+
+        return returnJson(702, 200, $this->toArray());
+
+    }
+
+    public function upDamage($data)
+    {
+        if (empty($data['id'])) {
+            return returnJson(607, 400, '缺少主键参数');
+        }
+
+        $config = Config::get($data['id']);
+        if (is_null($config)) {
+            return returnJson(603, 400, '没有此数据');
+        }
+
+        if ($config->getAttr('type') != 'DAMAGE') {
+            return returnJson(603, 400, '修改类型错误');
+        }
+
+
+        if (!empty($data['perc']) && !empty($data['unuse'])) {
+            $data['body'] = $data['perc'] . ',' . $data['unuse'];
+        }
+
+        $result = $this->allowField(true)->isUpdate(true)->save($data);
+
+        if ($result === false)
+            return returnJson(606, 400, $this->getError());
+
+        return returnJson(704, 200, '更新成功');
+    }
+
+    public function delDamage($data)
+    {
+        if (empty($data['id'])) {
+            return returnJson(607, 400, '缺少主键参数');
+        }
+
+        $config = Config::get($data['id']);
+        if (is_null($config)) {
+            return returnJson(603, 400, '没有此数据');
+        }
+
+        if ($config->getAttr('type') != 'DAMAGE') {
+            return returnJson(603, 400, '修改类型错误');
+        }
+
+        $config->delete();
+        return returnJson(703, 200, '删除成功');
     }
 
 }

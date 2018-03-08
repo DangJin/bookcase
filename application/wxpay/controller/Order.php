@@ -2,6 +2,7 @@
 
 namespace app\wxpay\controller;
 
+use app\admin\model\Config;
 use think\Controller;
 use think\Log;
 use think\Request;
@@ -103,7 +104,10 @@ class Order extends Common
                         //                    'trade_state' => 'SUCCESS',
                         //                    'cash_fee' => '1',
                         //                )
-                        return true;// 响应订单处理成功
+                        $order = new \app\index\model\Order();
+                        $result = $order->compOrder($order_res['out_trade_no'], $order['openid'], $order_res['transaction_id']);
+                        if ($result['status'] == 200)
+                            return true;// 响应订单处理成功
                     } else {
                         $fail();
                     }
