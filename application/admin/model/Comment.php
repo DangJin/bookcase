@@ -11,5 +11,9 @@ namespace app\admin\model;
 
 class Comment extends Common
 {
+    protected $parent =[
+        'book' => 'bid|title,author,press'
+    ];
 
+    
 }

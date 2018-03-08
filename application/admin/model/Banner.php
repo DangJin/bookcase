@@ -2,19 +2,15 @@
 /**
  * Created by PhpStorm.
  * User: wry
- * Date: 18/1/29
- * Time: 下午8:02
+ * Date: 18/3/6
+ * Time: 上午10:29
  */
 
 namespace app\admin\model;
 
 
-class Rtype extends Common
+class Banner extends Common
 {
-    protected $oneToMany = [
-        'repair'   => 'type',
-    ];
-
     public function del($data, $softdel = true)
     {
         if (!isset($data['ids']) && empty($data['ids']))
@@ -27,12 +23,12 @@ class Rtype extends Common
         $arr = array_unique($arr);
 
         foreach ($arr as $item) {
-            $rtype = Rtype::get($item);
-            if (!is_null($rtype)) {
-                $img = RepImg::get($rtype->getAttr('imgid'));
+            $banner = Banner::get($item);
+            if (!is_null($banner)) {
+                $img = BanImg::get($banner->getAttr('imgid'));
                 unlink($img->getAttr('path'));
                 $img->delete();
-                $rtype->delete();
+                $banner->delete();
             }
         }
     }

@@ -2,23 +2,25 @@
 /**
  * Created by PhpStorm.
  * User: wry
- * Date: 18/2/7
- * Time: 下午6:58
+ * Date: 18/3/6
+ * Time: 上午9:57
  */
 
 namespace app\admin\controller;
 
 
+use think\Controller;
 use think\Request;
 
-class BanImg extends Common
+class RepImg extends Common
 {
-    protected $model;
+    protected $model = '';
+
 
     public function __construct(Request $request = null)
     {
         parent::__construct($request);
-        $this->model = new \app\admin\model\BanImg();
+        $this->model = new \app\admin\model\RepImg();
     }
 
     public function add(Request $request)
@@ -31,11 +33,11 @@ class BanImg extends Common
                 $data['path'] = ROOT_PATH . 'public' . DS . 'uploads' . DS . $info->getSaveName();
                 $data['imgurl'] = DS . DS . $request->host(). DS . 'images' . DS . $info->getSaveName();
             } else {
-                return returnJson(609, 400, '上传失败');
+                return returnJson(609, 400, $info->getError());
             }
             return $this->model->add($data);
         } else {
-            return returnJson(609, 400, $file->getError());
+            return returnJson(609, 400, '没有上传图片');
         }
     }
 
@@ -53,5 +55,4 @@ class BanImg extends Common
     {
         return $this->model->del($request->param());
     }
-
 }

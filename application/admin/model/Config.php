@@ -29,7 +29,7 @@ class Config extends Common
 
         if (!empty($data['body']))
             $config->body = $data['body'];
-
+        $config->modify_user = session('id');
         $result = $config->isUpdate(true)->save();
 
         if (false === $result)
@@ -48,6 +48,8 @@ class Config extends Common
             return returnJson(607, 400, '缺少可借数量参数');
         }
 
+        $data['create_user'] = session('id');
+        $data['modify_user'] = session('id');
         $data['body'] = $data['money'].','.$data['num'];
         $data['type'] = 'DEPOSIT';
         $result = $this->validate(true)->allowField(true)->save($data);
@@ -78,7 +80,7 @@ class Config extends Common
         if (!empty($data['num'])) {
             $config->body = $data['money'].','.$data['money'];
         }
-
+        $config->modify_user = session('id');
         if (!empty($data['title'])) {
             $config->title = $data['title'];
         }
@@ -123,5 +125,68 @@ class Config extends Common
         return returnJson(704, 200, '修改成功');
     }
 
+    public function addRecharge($data)
+    {
+        if (empty($data['money'])) {
+            return returnJson(607, 400, '缺少金额');
+        }
+
+        $result = $this->save([
+            'body' => $data['money'],
+            'title' => '充值金额',
+            'type' => 'Recharge'
+        ]);
+        $data['create_user'] = session('id');
+        $data['modify_user'] = session('id');
+        if (false === $result) {
+            return returnJson(603, 400, '添加失败');
+        }
+
+        return returnJson(702, 200, '添加成功');
+    }
+
+    public function upRecharge($data)
+    {
+        if (empty($data['id'])) {
+            return returnJson(607, 400, '缺少主键参数');
+        }
+
+        if (empty($data['money'])) {
+            return returnJson(607, 400, '缺少金额');
+        }
+
+        $config = Config::get($data['id']);
+        if ($config->getAttr('type') != 'Recharge') {
+            return returnJson(603, 400, '修改类型错误');
+        }
+
+        $config->body = $data['money'];
+        $config->modify_user = session('id');
+        $result = $config->isUpdate(true)->save();
+
+        if (false === $result) {
+            return returnJson(603, 400, '修改失败');
+        }
+
+        return returnJson(702, 200, '修改成功');
+
+    }
+
+    public function delRecharge($data)
+    {
+        if (empty($data['id'])) {
+            return returnJson(607, 400, '缺少主键参数');
+        }
+
+        $config = Config::get($data['id']);
+        if ($config->getAttr('type') != 'Recharge') {
+            return returnJson(603, 400, '删除类型错误');
+        }
+
+        $config->delete();
+
+        return returnJson(703, 200, '删除成功');
+
+    }
 
 }

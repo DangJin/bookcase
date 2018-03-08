@@ -52,4 +52,19 @@ class Config extends Common
     {
         return $this->model->sesame($request->param());
     }
+
+    public function addRecharge(Request $request)
+    {
+        return $this->model->addRecharge($request->param());
+    }
+
+    public function upRecharge(Request $request)
+    {
+        return $this->model->upRecharge($request->param());
+    }
+
+    public function delRecharge(Request $request)
+    {
+        return $this->model->delRecharge($request->param());
+    }
 }

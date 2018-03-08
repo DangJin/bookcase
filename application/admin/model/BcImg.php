@@ -2,14 +2,14 @@
 /**
  * Created by PhpStorm.
  * User: wry
- * Date: 18/1/29
- * Time: 下午8:01
+ * Date: 18/3/6
+ * Time: 下午4:22
  */
 
 namespace app\admin\model;
 
 
-class RepImg extends Common
+class BcImg extends Common
 {
     public function del($data, $softdel = true)
     {
@@ -18,7 +18,7 @@ class RepImg extends Common
             return returnJson(604, 400, '缺少删除参数');
         }
 
-        $img = ItypeImg::get($data['ids']);
+        $img = BcImg::get($data['ids']);
         if (!is_null($img)) {
             unlink($img->getAttr('path'));
             $img->delete();

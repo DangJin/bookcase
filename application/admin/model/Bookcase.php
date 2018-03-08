@@ -21,6 +21,11 @@ class Bookcase extends Common
         'drawer' => 'pid'
     ];
 
+    protected $parent = [
+        'area' => 'area',
+        'user' => 'uid|id,name'
+    ];
+
     public function add($data)
     {
         if (empty($data)) {
@@ -112,6 +117,14 @@ class Bookcase extends Common
 
             $result = $this->where('area', $area->getAttr('id'))
                 ->paginate($limit, false, ['page' => $page]);
+            $result = $result->toArray();
+            if (!empty($result['data'])) {
+                foreach ($result['data'] as &$item) {
+                    $item['area'] = $this->table('area')->where('id', $item['area'])->find();
+                    $item['uid'] = $this->table('user')->where('id', $item['uid'])->field('id,name')->find();
+                }
+            }
+
 
             return returnJson(701, 200, $result);
         }
@@ -183,5 +196,64 @@ class Bookcase extends Common
         $qrcode->setLogoWidth(60);
         $qrcode->setErrorCorrectionLevel(ErrorCorrectionLevel::QUARTILE);
         $qrcode->writeFile($path. DS . $filename .'.png');
+    }
+
+    public function del($data, $softdel = true)
+    {
+        if (!isset($data['ids']) && empty($data['ids'])) {
+            return returnJson(604, 400, '缺少删除参数');
+        }
+
+        $arr = explode(',', $data['ids']);
+        $arr = array_filter($arr);
+        $arr = array_unique($arr);
+
+        foreach ($arr as $item) {
+            $count = $this->table('drawer')->where('pid', $item)->count();
+            if ($count > 0)
+                return returnJson(610, 400, '此书柜抽屉不为0, 不能删除');
+        }
+
+        foreach ($arr as $item) {
+            $bc = Bookcase::get($item);
+            if (!is_null($bc)) {
+                $img = BcImg::get($bc->getAttr('imgid'));
+                if (!is_null($img)) {
+                    unlink($img->getAttr('path'));
+                    $img->delete();
+                }
+            }
+        }
+
+        $this->where('id', 'in', $data['ids'])->delete();
+
+        return returnJson(703, 200, '删除成功');
+    }
+
+    public function bindManage($data)
+    {
+        if (empty($data['phone'])) {
+            return returnJson(608, 400, '手机号不能为空');
+        }
+
+        if (empty($data['id'])) {
+            return returnJson(608, 400, '书柜ID不能为空');
+        }
+
+        $user = $this->table('user')->where('phone', $data['phone'])->where('type', 3)->field('name, phone, id')->find();
+
+        if (is_null($user))
+            return returnJson(608, 400, '没有这位管理员');
+
+        $result = $this->update([
+            'id' => $data['id'],
+            'uid' => $user->getAttr('id')
+        ]);
+
+        if ($result === false) {
+            return returnJson(606, 400, '绑定失败');
+        }
+
+        return returnJson(704, 200, $user);
     }
 }

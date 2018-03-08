@@ -60,4 +60,10 @@ class Bookcase extends Common
         }
         $zip->finish();
     }
+
+    public function bindManage(Request $request)
+    {
+        return $this->model->bindManage($request->param());
+    }
+
 }

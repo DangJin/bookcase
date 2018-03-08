@@ -23,6 +23,8 @@ class Drawer extends Common
 
     public function getOperate(Request $request)
     {
-        return $this->model->getOperate($request->param());
+        $page = $request->has('page', 'param', true) ? $request->param('page') : 1;
+        $limit = $request->has('limit', 'param', true) ? $request->param('limit') : 10;
+        return $this->model->getOperate($request->param(), $page, $limit);
     }
 }

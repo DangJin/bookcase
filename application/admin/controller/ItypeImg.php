@@ -39,6 +39,16 @@ class ItypeImg extends Common
         }
     }
 
+    public function update(Request $request)
+    {
+        return returnJson(800, 400, '没有此接口');
+    }
+
+    public function select(Request $request)
+    {
+        return returnJson(800, 400, '没有此接口');
+    }
+
     public function delete(Request $request)
     {
         return $this->model->del($request->param());
