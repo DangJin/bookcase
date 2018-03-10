@@ -51,6 +51,9 @@ class Bookcase extends Common
         }
         $dirname = $request->param('dirname');
         $path = ROOT_PATH . 'public' . DS . 'uploads' . DS . $dirname;
+        if (!is_dir($path)) {
+            return returnJson(801, 400, '下载失败');
+        }
         $files = scandir($path);
         $zip = new ZipStream($dirname.'.zip');
         foreach ($files as $file) {

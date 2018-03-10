@@ -80,7 +80,7 @@ class Bookcase extends Common
                 //                book.buyout,drawer.number drawerNo,books.number booksNo,book.id bId'
                 //                )->select();
                 ->field(
-                    'book.title,book.type,book.details,book.cover,book.borrow,drawer.number drawerNo,books.number booksNo,book.id bId'
+                    'book.title,book.type,book.details,book.cover,book.borrow,drawer.number drawerNo,books.number booksNo,book.id bId,books.id books_id,drawer.col,drawer.row'
                 )->select();
 
             $case_arr            = $case->toArray();

@@ -2,8 +2,8 @@
 /**
  * Created by PhpStorm.
  * User: wry
- * Date: 18/2/7
- * Time: 下午11:14
+ * Date: 18/3/9
+ * Time: 上午9:43
  */
 
 namespace app\admin\validate;
@@ -11,16 +11,8 @@ namespace app\admin\validate;
 
 use think\Validate;
 
-class BanImg extends Validate
+class BcImg extends Validate
 {
-    protected $rule = [
-
-    ];
-
-    protected $message = [
-
-    ];
-
     protected $scene = [
         'update' => [''],
     ];

@@ -11,7 +11,7 @@ namespace app\admin\controller;
 
 use think\Request;
 
-class BcImg extends Commom
+class BcImg extends Common
 {
     protected $model;
 

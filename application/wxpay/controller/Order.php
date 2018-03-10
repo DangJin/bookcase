@@ -26,9 +26,7 @@ class Order extends Common
     {
         $notice_url = $request->host().'/wxpay/notice';
         // 生成订单号
-        $out_trade_no = date('Ymd').str_pad(
-                mt_rand(1, 99999), 5, '0', STR_PAD_LEFT
-            );
+        $out_trade_no = $request->param('out_trade_no');
         $openid       = $request->param("openid");
         $total_fee    = $request->param("total_fee");
         $body         = $request->param("body");
@@ -104,10 +102,15 @@ class Order extends Common
                         //                    'trade_state' => 'SUCCESS',
                         //                    'cash_fee' => '1',
                         //                )
-                        $order = new \app\index\model\Order();
-                        $result = $order->compOrder($order_res['out_trade_no'], $order['openid'], $order_res['transaction_id']);
-                        if ($result['status'] == 200)
+                        $UserOrder = new \app\index\model\Order();
+                        $result = $UserOrder->compOrder($order_res['out_trade_no'], $order_res['openid'], $order_res['transaction_id']);
+                        Log::info('ststus');
+                        Log::info($result);
+                        if ($result['status'] == 200) {
+                            Log::info('qazwsx');
                             return true;// 响应订单处理成功
+                        }
+
                     } else {
                         $fail();
                     }
