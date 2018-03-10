@@ -2,10 +2,17 @@
 
 namespace app\index\model;
 
+use think\Exception;
+use think\Log;
 use think\Model;
 
 class Order extends Common
 {
+    //创建时间
+    protected $createTime = 'create_time';
+
+    //修改时间
+    protected $updateTime = 'modify_time';
 
     public function initialize()
     {
@@ -36,5 +43,228 @@ class Order extends Common
 
 
     public function orderInfo(){
+    }
+
+    public function createOrder($data)
+    {
+        if (empty($data['uid'])) {
+            return returnJson(900, 400, '用户id不能为空');
+        }
+        $user = User::get($data['uid']);
+        if (is_null($user)) {
+            return returnJson(900, 400, '没有此用户');
+        }
+        if (empty($data['type'])) {
+            return returnJson(900, 400, '订单类型不能为空');
+        }
+
+        $data['create_user'] = $data['uid'];
+        $data['modify_user'] = $data['uid'];
+        $data['number'] = 'Ti' . strtotime('now');
+        //A  1:缴纳押金
+        //B  2:退还押金
+        //C  3:买断
+        //D  4:结算租金
+        //E  5:充值
+        //F  6:买断(余额)
+        //G  7:结算租金(余额)
+        //H  8:提现
+        switch ($data['type']) {
+            case '1':
+                if (empty($data['cid'])) {
+                    return returnJson(900, 400, '押金Id不能为空');
+                }
+
+                $config = \app\admin\model\Config::get($data['cid']);
+
+                if (is_null($config) || $config->getAttr('type') != 'DEPOSIT') {
+                    return returnJson(603, 400, '押金id错误');
+                }
+                $data['amount'] = explode(',',$config->getAttr('body'))[0];
+                $data['number'] = $data['number'] . 'A';
+                break;
+//            case '2':
+//                $data['number'] = $data['number'] . 'B';
+//                break;
+            case '3':
+                if (empty($data['book_id']))
+                    return returnJson(900, 400, '图书信息ID不能为空');
+                if (empty($data['books_id']))
+                    return returnJson(900, 400, '图书ID不能为空');
+                $data['bid'] = $data['books_id'];
+                $data['pid'] = $data['book_id'];
+                $data['number'] = $data['number'] . 'C';
+                break;
+            case '4':
+                $data['number'] = $data['number'] . 'D';
+                break;
+            case '5':
+                if (empty($data['cid'])) {
+                    return returnJson(900, 400, '金额Id不能为空');
+                }
+
+                $config = \app\admin\model\Config::get($data['cid']);
+
+                if (is_null($config) || $config->getAttr('type') != 'RECHARGE') {
+                    return returnJson(603, 400, '金额id错误');
+                }
+                $data['amount'] = $config->getAttr('body');
+                $data['number'] = $data['number'] . 'E';
+                break;
+            case '6':
+                if (empty($data['book_id']))
+                    return returnJson(900, 400, '图书信息ID不能为空');
+                if (empty($data['books_id']))
+                    return returnJson(900, 400, '图书ID不能为空');
+                $data['bid'] = $data['books_id'];
+                $data['pid'] = $data['book_id'];
+                $data['number'] = $data['number'] . 'F';
+                break;
+            case '7':
+                $data['number'] = $data['number'] . 'G';
+                break;
+//            case '8':
+//                $data['number'] = $data['number'] . 'H';
+//                break;
+            default:
+        }
+        $data['number'] = $data['number'].$this->num2str($this->create_key(6), 6);
+
+        $result = $this->allowField(true)->save($data);
+
+        if ($result === false) {
+            return returnJson(900, 400, '生成订单失败');
+        }
+        $tmp = $this->toArray();
+        $tmp['open_id'] = $user->getAttr('openid');
+        return returnJson(900, 200, $tmp);
+    }
+
+    private function num2str($num,$length)
+    {
+        $num_str = (string)$num;
+        $num_strlength = count($num_str);
+        if ($length > $num_strlength) {
+            $num_str=str_pad($num_str,$length,"0",STR_PAD_LEFT);
+        }
+        return $num_str;
+    }
+
+    private function create_key($length)
+    {
+        $randkey = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randkey .= chr(mt_rand(48, 57));
+        }
+        return $randkey;
+    }
+
+    public function compOrder($number, $openid, $wxno)
+    {
+        if (empty($number)) {
+            return returnJson(606, 400, '缺少订单编号');
+        }
+
+        if (empty($openid)) {
+            return returnJson(606, 400, '缺少用户编号');
+        }
+
+        $user = $this->table('user')->where('openid', $openid)->find();
+
+        if (is_null($user)) {
+            return returnJson(606, 400, '用户编号');
+        }
+
+        $order = $this->where('number', $data['number'])->where('uid', $user->getAttr('id'))->find();
+
+        if (is_null($order)) {
+            return returnJson(606, 400, '没有此订单');
+        }
+
+        switch ($order->getAttr('type')) {
+            case '1':
+                return $this->compDeposit($order);
+//                case '2':
+//
+//                    break;
+            case '3':
+                return $this->compBuy($order);
+                break;
+            case '4':
+
+                break;
+            case '5':
+                return $this->compChange($order, $wxno);
+                break;
+//                case '8':
+//
+//                    break;
+            default:
+        }
+
+        return returnJson(704, 200, '完成订单');
+    }
+
+    public function compDeposit($order)
+    {
+        $user = User::get($order->getAttr('uid'));
+
+        if (is_null($user))
+            return returnJson(901, 400, '订单用户错误');
+
+        $this->startTrans();
+        try {
+            $user->deposit = $user->deposit + $order->getAttr('amount');
+            $user->isUpdate(true)->save();
+            $order->state = 2;
+            $order->isUpdate(true)->save();
+            $this->commit();
+        } catch (Exception $e) {
+            $this->rollback();
+            return returnJson(901, 400, $e->getMessage());
+        }
+        return returnJson(999, 200, '完成订单');
+    }
+
+    public function compBuy($order)
+    {
+        $book = Books::get($order->getAttr('bid'));
+        if (is_null($user))
+            return returnJson(901, 400, '书籍信息错误');
+
+        $this->startTrans();
+        try {
+            $book->state = 4;
+            $book->isUpdate(true)->save();
+            $order->state = 2;
+            $order->isUpdate(true)->save();
+            $this->commit();
+        } catch (Exception $e) {
+            $this->rollback();
+            return returnJson(901, 400, $e->getMessage());
+        }
+        return returnJson(999, 200, '完成订单');
+    }
+
+    public function compChange($order, $wxno)
+    {
+        $user = User::get($order->getAttr('uid'));
+
+        if (is_null($user))
+            return returnJson(901, 400, '订单用户错误');
+        Log::info('compChange');
+        $this->startTrans();
+        try {
+            $user->money = $user->money + $order->getAttr('amount');
+            $user->isUpdate(true)->save();
+            $order->state = 2;
+            $order->wxno = $wxno;
+            $order->isUpdate(true)->save();
+            $this->commit();
+        } catch (Exception $e) {
+            $this->rollback();
+            return returnJson(901, 400, $e->getMessage());
+        }
+        return returnJson(999, 200, '完成订单');
     }
 }

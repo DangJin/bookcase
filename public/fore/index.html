@@ -133,18 +133,26 @@
             // 开始其他业务逻辑
             var openId = data.id;
             var userId = data.uid;
-            // 支付业务逻辑
+            console.log(sessionStorage.getItem("user"));
+
+
             $("#pay").click(function () {
-                initJssdk(function (status) {
-                    if (status) {
-                        var body = "订单测试";
-                        var total_fee = 1;
-                        orderUnify(body, total_fee, openId, function (prepay_id) {
-                            wxPay(prepay_id)
-                        })
-                    }
-                })
+                sessionStorage.clear();
+                alert(sessionStorage.getItem("user"));
             });
+            // 支付业务逻辑
+            // $("#pay").click(function () {
+            //     initJssdk(function (status) {
+            //         if (status) {
+            //             var body = "订单测试";
+            //             var total_fee = 1;
+            //             var out_trade_no = Date.parse(new Date());
+            //             orderUnify(body, total_fee, openId, out_trade_no, function (prepay_id) {
+            //                 wxPay(prepay_id)
+            //             })
+            //         }
+            //     })
+            // });
         });
     });
 
@@ -170,7 +178,7 @@
         var url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + appId + "&redirect_uri=" + location.href.split('#')[0] + "&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect"
         var isLogin = sessionStorage.getItem("user");
         var code = getUrlParam("code");
-        if (!code) {
+        if (!code && !isLogin) {
             window.location = url;
         } else {
             if (isLogin) {
@@ -235,9 +243,10 @@
      * @param body
      * @param total_fee
      * @param openid
+     * @param out_trade_no
      * @param callback
      */
-    function orderUnify(body, total_fee, openid, callback) {
+    function orderUnify(body, total_fee, openid, out_trade_no, callback) {
         $.ajax({
             type: 'GET',
             url: 'http://tpbook.codwiki.cn/wxpay/order',
@@ -245,10 +254,12 @@
             data: {
                 body: body,
                 openid: openid,
-                total_fee: total_fee
+                total_fee: total_fee,
+                out_trade_no: out_trade_no
             },
             success: function (data) {
                 if (data.code === 200) {
+                    console.log("--------->", data)
                     callback(data.data.prepay_id)
                 }
             },
@@ -291,5 +302,20 @@
                 $("body").append(error.errMsg)
             }
         });
+    }
+
+
+    function shareTimeline(title, imgUrl) {
+        wx.onMenuShareTimeline({
+            title: title, // 分享标题
+            url: location.href.split('#')[0],// 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: imgUrl, // 分享图标
+            success: function () {
+            },
+            cancel: function () {
+
+            }
+        })
+
     }
 </script>

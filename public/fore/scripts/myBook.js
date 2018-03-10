@@ -4,6 +4,7 @@ require.config({
     'template': '../js/template-web',
     'F': '../js/function',
     'api': '../api/index',
+    'wx': '../js/jweixin',
     'mine': '../api/mine/index'
   }
 })
@@ -29,11 +30,16 @@ require(['jquery', 'F', 'mine'], function ($, F, mine) {
 
     initDom()
 
+    F.wxLogin(function (data) {
+      getMyBorrow()
+    })
 
     $('.select>ul>li').click(function () {
-      options.type = $(this).data('value')
-      getMyBorrow()
-      $('.select>ul>li').toggleClass('active')
+      if ($(this).attr('class') !== 'active') {
+        options.type = $(this).data('value')
+        getMyBorrow()
+        $('.select>ul>li').toggleClass('active')
+      }
     })
 
     function getMyBorrow () {
@@ -44,7 +50,6 @@ require(['jquery', 'F', 'mine'], function ($, F, mine) {
     }
 
     function initDom () {
-      getMyBorrow()
     }
 
   })

@@ -4,6 +4,7 @@ require.config({
     'template': '../js/template-web',
     'F': '../js/function',
     'api': '../api/index',
+    'wx': '../js/jweixin',
     'product': '../api/product/index'
   }
 })

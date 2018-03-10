@@ -26,15 +26,20 @@ require(['jquery', 'F', 'mine'], function ($, F, mine) {
     initDom()
 
     F.wxLogin(function (data) {
-
-      mine.getMyWallet(options, function (res) {
+      mine.getMyMessage(options, function (res) {
         console.log(res)
-        F.display('myWallet', res, function () {
+        F.display('myVipCard', res, function () {
+          $('.content>ul>li').click(function () {
+            $('.content>ul>li').removeClass('active')
+            $(this).addClass('active')
+          })
         })
       })
+
     })
 
     function initDom () {
+
     }
 
   })

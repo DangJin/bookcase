@@ -9,47 +9,29 @@
     <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel="stylesheet" href="css/animate.css">
     <link rel="stylesheet" href="css/style.css">
+    <script data-main="scripts/recharge" src="js/require.js"></script>
 </head>
 <body>
 <div class="recharge">
-    <div class="title">充值金额</div>
+</div>
+<script type="text/html" id="recharge">
     <div class="money_select">
         <ul>
-            <li>
-                <a href="javascript:void(0)"><span>200</span>元</a>
-            </li>
-            <li>
-                <a href="javascript:void(0)"><span>100</span>元</a>
-            </li>
-            <li>
-                <a href="javascript:void(0)"><span>50</span>元</a>
-            </li>
-            <li class="active">
-                <a href="javascript:void(0)"><span>20</span>元</a>
-            </li>
+            {{each data}}
+            <li data-id="{{$value.id}}"><span>{{$value.body/100}}</span>元</li>
+            {{/each}}
+            <li id="other">其他金额</li>
         </ul>
     </div>
-    <div class="money_input">
-        <span>￥</span>
-        <input type="number" placeholder="(自定义金额)" onfocus="InputFocus()" value="20">
+    <div class="dialog">
+        <div class="title"><span>取消</span><h5>输入充值金额</h5></div>
+        <div class="content">
+            <span>￥</span><input id="input" type="number" placeholder="1-200">
+        </div>
+        <a>确认</a>
     </div>
-    <a href="">立即充值</a>
-    <p>点击充值，即表示同意<a href="">《服务条款》《隐私条款》</a></p>
-</div>
-</body>
-<script src="js/jquery.2.1.1min.js"></script>
-<script>
-
-  $('.money_select>ul>li').click(function () {
-    var moneyNum = $(this).find('span').text()
-    $(this).siblings().removeClass('active')
-    $(this).addClass('active')
-    $('.money_input>input').val(moneyNum)
-  })
-
-  function InputFocus () {
-    $('.money_select>ul>li').removeClass('active')
-  }
-
+    <p>点击去充值,即表示阅读并同意 <a href="">充值协议</a> <br>我们不会以任何形式要求您输入银行账户和密码</p>
+    <a>立即充值</a>
 </script>
+</body>
 </html>

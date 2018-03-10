@@ -21,18 +21,23 @@ require(['jquery', 'F', 'mine'], function ($, F, mine) {
    */
   $(function () {
     // 全局存储用户id
-    var options = {}
+    var options = {
+      page: '',
+      limit: ''
+    }
 
     initDom()
 
     F.wxLogin(function (data) {
-
-      mine.getMyWallet(options, function (res) {
-        console.log(res)
-        F.display('myWallet', res, function () {
-        })
-      })
+      getMyBorrow()
     })
+
+    function getMyBorrow () {
+      mine.getMyBorrow(options, function (res) {
+        console.log(res)
+        F.display('list', res, function () {})
+      })
+    }
 
     function initDom () {
     }

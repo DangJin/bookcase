@@ -21,21 +21,25 @@ require(['jquery', 'F', 'bookCase'], function ($, F, bookCase) {
    */
   $(function () {
     // 全局存储用户id
-    var options = {
-      book_id: ''
-    }
+    var options = {}
 
     initDom()
 
     F.wxLogin(function (data) {
-      bookCase.getBookMessage(options, function (res) {
-        console.log(res)
-        F.display('title', res, function () {
-          $('.title>.content>ul>li').click(function () {
-            $('.title>.content>ul>li').removeClass('active')
-            for (var i = 0; i < $(this).data('value'); i++) {
-              $('.title>.content>ul>li').eq(i).addClass('active')
-              $('.title>.content>strong>span').text(i + 1 + '.0')
+      // 开始其他业务逻辑
+      var openId = data.id
+      var userId = data.uid
+
+      F.display('book', options, function () {
+        // 支付业务逻辑
+        $('#pay').click(function () {
+          F.initJssdk(function (status) {
+            if (status) {
+              var body = '订单测试'
+              var total_fee = 1
+              F.orderUnify(body, total_fee, openId, function (prepay_id) {
+                F.wxPay(prepay_id)
+              })
             }
           })
         })
@@ -43,7 +47,7 @@ require(['jquery', 'F', 'bookCase'], function ($, F, bookCase) {
     })
 
     function initDom () {
-      options.book_id = F.getUrlParams('bid')
+
     }
 
   })

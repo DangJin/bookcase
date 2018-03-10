@@ -5,11 +5,11 @@ require.config({
     'F': '../js/function',
     'api': '../api/index',
     'wx': '../js/jweixin',
-    'mine': '../api/mine/index'
+    'bookCase': '../api/bookCase/index'
   }
 })
 
-require(['jquery', 'F', 'mine'], function ($, F, mine) {
+require(['jquery', 'F', 'bookCase'], function ($, F, bookCase) {
 
   /**
    * 监听页面加载完成
@@ -26,15 +26,13 @@ require(['jquery', 'F', 'mine'], function ($, F, mine) {
     initDom()
 
     F.wxLogin(function (data) {
+      F.display('list', options, function () {
 
-      mine.getMyWallet(options, function (res) {
-        console.log(res)
-        F.display('myWallet', res, function () {
-        })
       })
     })
 
     function initDom () {
+
     }
 
   })

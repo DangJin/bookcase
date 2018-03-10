@@ -21,10 +21,9 @@ class Sign extends Common
         $data = $this->whereTime('create_time', 'd')->where('create_user', $uid)
             ->find();
         if (empty($data)) {
-            return false;
+            return 0;
         }
-
-        return true;
+        return 1;
     }
 
 

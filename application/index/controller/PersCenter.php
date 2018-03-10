@@ -158,12 +158,12 @@ class PersCenter extends Common
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public function userProfile()
+    public function userProfile(Request $request)
     {
-        $user_id = Session::get('user_id');
-        //        $user_id = 4;
-
-        $sign = new \app\index\model\Sign();
+        //        $user_id = Session::get('user_id');
+        //                $user_id = 23;
+        $user_id = $request->param("uid");
+        $sign    = new \app\index\model\Sign();
         // 判断是否是连续签到
         if ( ! $sign->lastIsSign($user_id)) {
             // 设置为 0

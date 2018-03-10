@@ -67,7 +67,9 @@
         'init'     => ['wechat/index/index', ['method' => 'GET']],
         'wxconfig' => ['wechat/jsSdk/getWxConfig', ['method' => 'POST']],
         'oauth'    => ['wechat/oauth/oauth_callback', ['method' => 'GET']],
-        'login'    => ['wechat/wxLogin/wxLogin', ['method' => 'GET']],
+        'menu'     => ['wechat/menu/currentMenu', ['method' => 'GET']],
+        'addMenu'  => ['wechat/menu/addMenu', ['method' => 'POST']],
+        'delMenu'  => ['wechat/menu/delMenu', ['method' => 'GET']],
     ]
 );
 
