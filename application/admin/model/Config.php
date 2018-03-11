@@ -272,4 +272,35 @@ class Config extends Common
         return returnJson(703, 200, '删除成功');
     }
 
+    public function upRent($data)
+    {
+        if (empty($data['id'])) {
+            return returnJson(607, 400, '缺少主键参数');
+        }
+
+        if (empty($data['body'])) {
+            return returnJson(607, 400, '缺少百分比');
+        }
+
+        $config = Config::get($data['id']);
+        if (is_null($config)) {
+            return returnJson(603, 400, '没有此数据');
+        }
+
+        if ($config->getAttr('type') != 'RENT') {
+            return returnJson(603, 400, '修改类型错误');
+        }
+
+        $config->body = $data['body'];
+
+        $result = $config->isUpdate(true)->save();
+
+        if ($result === false) {
+            return returnJson(606, 400, $this->getError());
+        }
+
+        return returnJson(704, 200, '更新成功');
+
+    }
+
 }

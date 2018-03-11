@@ -26,8 +26,10 @@ class Itype extends Common
             $itype = Itype::get($item);
             if (!is_null($itype)) {
                 $img = ItypeImg::get($itype->getAttr('imgid'));
-                unlink($img->getAttr('path'));
-                $img->delete();
+                if (!is_null($img)) {
+                    unlink($img->getAttr('path'));
+                    $img->delete();
+                }
                 $itype->delete();
             }
         }

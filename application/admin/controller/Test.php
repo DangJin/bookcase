@@ -23,7 +23,10 @@ class Test extends Common
 
     public function test()
     {
-        return returnJson(603, 400, 'AAAAAAAAAA');
+        $micro = microtime();
+        echo  $micro;
+        $micro = explode(' ', $micro);
+        echo $micro[1] . substr(explode('.', $micro[0])[1], 0, -2);
     }
 
     public function createQrcode()#$filename, $data)

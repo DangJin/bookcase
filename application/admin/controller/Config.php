@@ -82,4 +82,9 @@ class Config extends Common
     {
         return $this->model->delDamage($request->param());
     }
+
+    public function upRent(Request $request)
+    {
+        return $this->model->upRent($request->param());
+    }
 }

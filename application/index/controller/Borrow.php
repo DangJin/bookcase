@@ -34,4 +34,19 @@ class Borrow extends Common
 
         // 查询图书价格
     }
+
+    public function getBorrowOrder(Request $request)
+    {
+        return $this->borrow->getBorrowOrder($request->param());
+    }
+
+    public function showOrder(Request $request)
+    {
+        return $this->borrow->showOrder($request->param());
+    }
+
+    public function addBorrow(Request $request)
+    {
+        return $this->borrow->addBorrow($request->param());
+    }
 }
