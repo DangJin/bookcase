@@ -60,7 +60,9 @@ class Order extends Common
 
         $data['create_user'] = $data['uid'];
         $data['modify_user'] = $data['uid'];
-        $data['number'] = 'Ti' . strtotime('now');
+        $micro = explode(' ', microtime());
+        $data['number'] = 'Ti' . $micro[1] . substr(explode('.', $micro[0])[1], 0, -2);
+
         //A  1:缴纳押金
         //B  2:退还押金
         //C  3:买断
@@ -96,8 +98,7 @@ class Order extends Common
                 $data['number'] = $data['number'] . 'C';
                 break;
             case '4':
-                $data['number'] = $data['number'] . 'D';
-                break;
+                return $this->createFour($data, $user);
             case '5':
                 if (empty($data['cid'])) {
                     return returnJson(900, 400, '金额Id不能为空');
@@ -128,7 +129,7 @@ class Order extends Common
 //                break;
             default:
         }
-        $data['number'] = $data['number'].$this->num2str($this->create_key(6), 6);
+        $data['number'] = $data['number'].$this->num2str($this->create_key(4), 4);
 
         $result = $this->allowField(true)->save($data);
 
@@ -162,36 +163,52 @@ class Order extends Common
     public function compOrder($number, $openid, $wxno)
     {
         if (empty($number)) {
-            return returnJson(606, 400, '缺少订单编号');
+            return [
+                'code' => 606,
+                'status' => 400,
+                'msg' => '缺少订单编号'
+            ];
         }
 
         if (empty($openid)) {
-            return returnJson(606, 400, '缺少用户编号');
+            return [
+                'code' => 606,
+                'status' => 400,
+                'msg' => '缺少用户编号'
+            ];
         }
 
         $user = $this->table('user')->where('openid', $openid)->find();
 
         if (is_null($user)) {
-            return returnJson(606, 400, '用户编号');
+            return [
+                'code' => 606,
+                'status' => 400,
+                'msg' => '用户编号错误'
+            ];
         }
 
-        $order = $this->where('number', $data['number'])->where('uid', $user->getAttr('id'))->find();
+        $order = $this->where('number', $number)->where('uid', $user->getAttr('id'))->find();
 
         if (is_null($order)) {
-            return returnJson(606, 400, '没有此订单');
+            return [
+                'code' => 606,
+                'status' => 400,
+                'msg' => '没有此订单'
+            ];
         }
 
         switch ($order->getAttr('type')) {
             case '1':
                 return $this->compDeposit($order);
 //                case '2':
-//
+
 //                    break;
             case '3':
                 return $this->compBuy($order);
                 break;
             case '4':
-
+                return $this->compFour($order, $wxno);
                 break;
             case '5':
                 return $this->compChange($order, $wxno);
@@ -202,7 +219,11 @@ class Order extends Common
             default:
         }
 
-        return returnJson(704, 200, '完成订单');
+        return [
+            'code' => 606,
+            'status' => 400,
+            'msg' => '完成订单'
+        ];
     }
 
     public function compDeposit($order)
@@ -210,7 +231,11 @@ class Order extends Common
         $user = User::get($order->getAttr('uid'));
 
         if (is_null($user))
-            return returnJson(901, 400, '订单用户错误');
+            return [
+                'code' => 606,
+                'status' => 400,
+                'msg' => '订单用户错误'
+            ];
 
         $this->startTrans();
         try {
@@ -221,9 +246,17 @@ class Order extends Common
             $this->commit();
         } catch (Exception $e) {
             $this->rollback();
-            return returnJson(901, 400, $e->getMessage());
+            return [
+                'code' => 606,
+                'status' => 400,
+                'msg' => $e->getMessage()
+            ];
         }
-        return returnJson(999, 200, '完成订单');
+        return [
+            'code' => 606,
+            'status' => 200,
+            'msg' => '完成订单'
+        ];
     }
 
     public function compBuy($order)
@@ -241,9 +274,17 @@ class Order extends Common
             $this->commit();
         } catch (Exception $e) {
             $this->rollback();
-            return returnJson(901, 400, $e->getMessage());
+            return [
+                'code' => 606,
+                'status' => 400,
+                'msg' => $e->getMessage()
+            ];
         }
-        return returnJson(999, 200, '完成订单');
+        return [
+            'code' => 606,
+            'status' => 200,
+            'msg' => '完成订单'
+        ];
     }
 
     public function compChange($order, $wxno)
@@ -251,8 +292,8 @@ class Order extends Common
         $user = User::get($order->getAttr('uid'));
 
         if (is_null($user))
-            return returnJson(901, 400, '订单用户错误');
-        Log::info('compChange');
+            return ['code' => 901, 'status' => 400, 'msg' => '用户错误'];#returnJson(901, 400, '用户错误');
+
         $this->startTrans();
         try {
             $user->money = $user->money + $order->getAttr('amount');
@@ -263,8 +304,122 @@ class Order extends Common
             $this->commit();
         } catch (Exception $e) {
             $this->rollback();
-            return returnJson(901, 400, $e->getMessage());
+            return [
+                'code' => 606,
+                'status' => 400,
+                'msg' => $e->getMessage()
+            ];
         }
-        return returnJson(999, 200, '完成订单');
+
+        return [
+            'code' => 606,
+            'status' => 200,
+            'msg' => '完成订单'
+        ];
+    }
+
+    public function createFour($data, $user)
+    {
+        if (empty($data['con_id'])) {
+            return returnJson(900, 400, '报损ID不能为空');
+        }
+
+        if (empty($data['books_id']))
+            return returnJson(900, 400, '图书ID不能为空');
+
+        if (empty($data['amount'])) {
+            return returnJson(900, 400, '报损ID不能为空');
+        }
+
+        $books = Books::get($data['books_id']);
+        if (is_null($books)) {
+            return returnJson(900, 400, '图书信息错误');
+        }
+
+        $data['number'] = $data['number'] . 'D' . $this->num2str($this->create_key(4), 4);
+        $data['bid'] = $data['books_id'];
+
+        if ($data['con_id'] == -1) {
+            $data['number'] = $data['number'] . 'X';
+        } else {
+            $config = Config::get($data['con_id']);
+            if (is_null($config) || $config->getAttr('type') == 'DAMAGE')
+                return returnJson(900, 400, '报损错误');
+            $data['number'] = $data['number'] . 'Y' . $data['con_id'];
+        }
+        $data['bid'] = $books->getAttr('id');
+        $data['pid'] = $books->getAttr('pid');
+        $result = $this->allowField(true)->save($data);
+
+        if ($result === false) {
+            return returnJson(900, 400, '生成订单失败');
+        }
+        $tmp = $this->toArray();
+        $tmp['open_id'] = $user->getAttr('openid');
+        return returnJson(900, 200, $tmp);
+    }
+
+
+    public function compFour($order, $wxno)
+    {
+        $user = User::get($order->getAttr('uid'));
+        $config = null;
+        if (!strpos($order->getAttr('number'), 'X')) {
+            $config = explode('Y', $order->getAttr('number'))[1];
+        }
+        $money = 0;
+        $book = $this->table('book')->where('id', $order->getAttr('pid'))->find();
+        if (!is_null($config)) {
+            $config = $this->table('config')->where('id', $config)->find();
+            $money = floor((int)$book->getAttr('price') * (int)explode(',', $config->getAttr('body'))[0] / 100);
+        }
+
+        $this->startTrans();
+        try {
+            $user->inborrows = (int)$user->inborrows - 1;
+            $user->isUpdate(true)->save();
+
+            $drawer = $this->table('drawer')->where('bid', $order->getAttr('bid'))->where('state', 2)->find();
+
+            $this->table('drawer')->where('bid', $order->getAttr('bid'))->where('state', 2)->update([
+                'state' => 2
+            ]);
+
+            $books = $this->table('books')->where('id', $order->getAttr('bid'))->find();
+            $this->table('books')->where('id', $order->getAttr('bid'))->update([
+                'state' => 1
+            ]);
+
+            $time = floor((strtotime('now')-strtotime($order->getAttr('create_time'))) / 3600);
+            $this->table('borrow')
+                ->where('uid', $order->getAttr('uid'))
+                ->where('bid', $order->getAttr('bid'))
+                ->where('state', 1)->update([
+                    'wxno' => $wxno,
+                    'state' => 2,
+                    'money' => $money,
+                    'repay' => $time
+                ]);
+
+            $this->update([
+                'state' => 2,
+                'wxno' => $wxno,
+                '$time' => $time
+            ]);
+
+            $this->commit();
+        } catch (Exception $e) {
+            $this->rollback();
+            return [
+                'code' => 606,
+                'status' => 400,
+                'msg' => $e->getMessage()
+            ];#returnJson(606, 400, $e->getMessage());
+        }
+        return [
+            'code' => 606,
+            'status' => 200,
+            'msg' => '完成订单'
+        ];
     }
 }

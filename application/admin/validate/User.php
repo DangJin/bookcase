@@ -15,7 +15,7 @@ class User extends Validate
 {
     protected $rule = [
         'type' => 'require',
-        'phone' => 'require|unique:user,isdel=0&phone=:phone',
+        'phone' => 'require|unique:user,isdel=0&phone=:phone&type=:type',
     ];
 
     protected $message = [

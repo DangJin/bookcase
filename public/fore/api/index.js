@@ -20,6 +20,7 @@ define(function () {
 
     // 柜子接口
     BookCase: {
+<<<<<<< HEAD
       getBookCaseList: root + '/index/bookcase/list',
       getBookCaseMessage: root + '/index/bookcase/books',
       getBookMessage: root + '/index/book/info',
@@ -30,6 +31,12 @@ define(function () {
 
     //微信地图接口
     Map: {
+=======
+      getBookCaseMessage: root + '/index/bookcase/books',
+      getBookMessage: root + '/index/book/info',
+      addMyWant: root + '/index/book/wish',
+      getArticleList: root + '/index/book/catelog'
+>>>>>>> master
     }
   }
   return {

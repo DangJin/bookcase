@@ -37,4 +37,54 @@ class Config extends Common
     {
         return $this->model->addDeposit($request->param());
     }
+
+    public function upDeposit(Request $request)
+    {
+        return $this->model->upDeposit($request->param());
+    }
+
+    public function delDeposit(Request $request)
+    {
+        return $this->model->delDeposit($request->param());
+    }
+
+    public function sesame(Request $request)
+    {
+        return $this->model->sesame($request->param());
+    }
+
+    public function addRecharge(Request $request)
+    {
+        return $this->model->addRecharge($request->param());
+    }
+
+    public function upRecharge(Request $request)
+    {
+        return $this->model->upRecharge($request->param());
+    }
+
+    public function delRecharge(Request $request)
+    {
+        return $this->model->delRecharge($request->param());
+    }
+
+    public function addDamage(Request $request)
+    {
+        return $this->model->addDamage($request->param());
+    }
+
+    public function upDamage(Request $request)
+    {
+        return $this->model->upDamage($request->param());
+    }
+
+    public function delDamage(Request $request)
+    {
+        return $this->model->delDamage($request->param());
+    }
+
+    public function upRent(Request $request)
+    {
+        return $this->model->upRent($request->param());
+    }
 }

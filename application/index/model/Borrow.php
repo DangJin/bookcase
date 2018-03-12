@@ -78,4 +78,212 @@ class Borrow extends Common
 
         return false;
     }
+
+    public function getBorrowOrder($data)
+    {
+        if (empty($data['borrow_id'])) {
+            return returnJson(607, 400, '缺少借阅ID');
+        }
+
+        $result = Borrow::get($data['borrow_id']);
+        if (is_null($result)) {
+            return returnJson(607, 400, '无此借阅记录');
+        }
+        $data = $result->toArray();
+
+        $result = [];
+
+        $result['order'] = $data['number'];
+        $time = strtotime('now');
+        $result['day'] = floor(($time-strtotime($data['create_time']))/86400);
+        $result['hour'] = floor(($time-strtotime($data['create_time']))%86400/3600);
+
+        $config = $this->table('config')->where('type', 'DAMAGE')->field('id,title')->select();
+        $result['damage'] = $config->toArray();
+        return returnJson(701, 200, $result);
+    }
+
+    public function showOrder($data)
+    {
+        if (empty($data['borrow_id'])) {
+            return returnJson(607, 400, '缺少借阅ID');
+        }
+
+        if (empty($data['con_id'])) {
+            return returnJson(607, 400, '缺少损坏ID');
+        }
+
+        $borrow = Borrow::get($data['borrow_id']);
+        if (is_null($borrow)) {
+            return returnJson(607, 400, '借阅记录不存在');
+        }
+
+        $book = $this->table('book')->where('id', $borrow->getAttr('pid'))->find();
+
+        if (is_null($book)) {
+            return returnJson(607, 400, '图书不存在');
+        }
+
+        $rent = $this->table('config')->where('type', 'RENT')->find();
+
+        if (is_null($rent)) {
+            return returnJson(607, 400, '数据库配置错误, 请联系管理员');
+        }
+
+        $money = (int)$book->getAttr('price');
+
+        $result = [];
+        if ($data['con_id'] == -1) {
+            $result['sunhuai'] = 0;
+        } else {
+            $config = $this->table('config')->where('id', $data['con_id'])->find();
+
+            if (is_null($config) || $config->getAttr('type') != 'DAMAGE') {
+                return returnJson(607, 400, '损坏赔偿信息不正确');
+            }
+            $result['sunhuai'] = floor($money * (int)explode(',', $config->getAttr('body'))[0] / 100);
+        }
+        $hour = floor((strtotime('now')-strtotime($borrow->getAttr('create_time'))) / 3600);
+        $result['zujin'] = floor((int)$book->getAttr('price') * (int)$rent->getAttr('body') * $hour / 100);
+        $result['total'] = $result['zujin'] + $result['sunhuai'];
+
+        return returnJson(701, 200, $result);
+    }
+
+    public function addBorrow($data)
+    {
+        $check = $this->check($data);
+        if ($check['status'] == 200) {
+            return $this->createBorrow($data);
+        } else {
+            return returnJson(900, 400, $check['msg']);
+        }
+    }
+
+    public function check($data) {
+        if (empty($data['books_id'])) {
+            return [
+                'code' => 900,
+                'status' => 400,
+                'msg' => '书籍信息ID不能为空'
+            ];#returnJson(900, 400, '书籍信息ID不能为空');
+        }
+
+        if (empty($data['uid'])) {
+            return [
+                'code' => 900,
+                'status' => 400,
+                'msg' => '用户ID不能为空'
+            ];
+        }
+
+        $user = User::get($data['uid']);
+
+        if (is_null($user)) {
+            return [
+                'code' => 900,
+                'status' => 400,
+                'msg' => '用户信息错误'
+            ];
+        }
+
+        $books = $this->table('books')->where('id', $data['books_id'])->find();
+
+        if (is_null($books)) {
+            return [
+                'code' => 900,
+                'status' => 400,
+                'msg' => '没有此书'
+            ];
+        }
+
+        if ($books->getAttr('state') != 1) {
+            return [
+                'code' => 900,
+                'status' => 400,
+                'msg' => '此书不可借'
+            ];#returnJson(900, 400, '此书不可借');
+        }
+
+        if (is_null($user->getAttr('deposit_id'))) {
+            return [
+                'code' => 901,
+                'status' => 400,
+                'msg' => '没有缴纳押金'
+            ];#returnJson(901, 400, '没有缴纳押金');
+        }
+
+        $drawer = $this->table('drawer')->where('bid', $data['books_id'])->where('state', 2)->find();
+
+        if (is_null($drawer)) {
+            return [
+                'code' => 901,
+                'status' => 400,
+                'msg' => '抽屉状态异常'
+            ];
+        }
+
+        $config = $this->table('config')->where('id', $user->getAttr('deposit_id'))->find();
+
+        $num = explode(',', $config->getAttr('body'))[1];
+
+        if ((int)$num <= (int)$user->getAttr('inborrows')) {
+            return [
+                'code' => 900,
+                'status' => 400,
+                'msg' => '借书数超出押金可借本数, 不可在借'
+            ];#returnJson(900, 400, '借书数超出押金可借本数, 不可在借');
+        }
+
+        return [
+            'code' => 999,
+            'status' => 200,
+            'msg' => '验证成功可借图书'
+        ];#returnJson(999, 200, '验证成功可借图书');
+    }
+
+    public function createBorrow($data)
+    {
+        $user = User::get($data['uid']);
+        $this->startTrans();
+        try {
+            $time = date("Y-m-d H:i:s", strtotime('now'));
+            if ($user->getAttr('bornum') == 0) {
+                $user->fribor_time = $time;
+            }
+            $user->bornum += 1;
+            $user->inborrows += 1;
+            $user->isUpdate(true)->save();
+
+            $drawer = $this->table('drawer')->where('bid', $data['books_id'])->where('state', 2)->find();
+
+            $this->table('drawer')->where('bid', $data['books_id'])->where('state', 2)->update([
+                'state' => 3,
+                'num' => (int)$drawer->getAttr('num') + 1
+            ]);
+
+            $books = $this->table('books')->where('id', $data['books_id'])->find();
+            $this->table('books')->where('id', $data['books_id'])->update([
+                'state' => 2,
+                'count' => (int)$books->getAttr('count') + 1
+            ]);
+
+            $this->table('borrow')->insert([
+                'bid' => $books->getAttr('id'),
+                'pid' => $books->getAttr('pid'),
+                'state' => 1,
+                'uid' => $user->getAttr('id'),
+                'create_time' => $time,
+                'create_user' => $user->getAttr('id'),
+                'modify_user' => $user->getAttr('id'),
+                'modify_time' => $time
+            ]);
+
+            $this->commit();
+        } catch (Exception $e) {
+            $this->rollback();
+            return returnJson(606, 400, $e->getMessage());
+        }
+        return returnJson(704, 200, '成功借阅');
+    }
 }

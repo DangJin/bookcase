@@ -18,7 +18,15 @@
 <script type="text/html" id="articleList">
 
     <div class="articleList_top">
+<<<<<<< HEAD
         <img src="https://dummyimage.com/16:9x320&text=XXXX" alt="">
+=======
+        {{each data.imgs}}
+        <div class="img">
+            <img src="{{$value.imgurl}}" alt="">
+        </div>
+        {{/each}}
+>>>>>>> master
     </div>
     <!--<div class="articleList_content">-->
     <!--<div class="title"><h5>推荐语</h5></div>-->

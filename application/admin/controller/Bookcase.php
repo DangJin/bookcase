@@ -10,6 +10,7 @@ namespace app\admin\controller;
 
 
 use think\Request;
+use ZipStream\ZipStream;
 
 class Bookcase extends Common
 {
@@ -23,7 +24,15 @@ class Bookcase extends Common
 
     public function add(Request $request)
     {
-        return $this->model->add($request->param());
+        if ($request->isPost())
+        {
+            if (!$request->has('csrf', 'header', true) || $request->header('csrf') != session('csrf'))
+            {
+                return returnJson(600, 400, '表单token验证失败');
+            }
+            session('csrf', md5($_SERVER['REQUEST_TIME_FLOAT']));
+            return $this->model->add($request->param());
+        }
     }
 
     public function getByArea(Request $request)
@@ -34,4 +43,30 @@ class Bookcase extends Common
     public function getManage(Request $request) {
         return $this->model->getManage($request->param());
     }
+
+    public function getZip(Request $request)
+    {
+        if (!$request->has('dirname', 'param', true)) {
+            return returnJson('400', '607', '缺少dirname参数');
+        }
+        $dirname = $request->param('dirname');
+        $path = ROOT_PATH . 'public' . DS . 'uploads' . DS . $dirname;
+        if (!is_dir($path)) {
+            return returnJson(801, 400, '下载失败');
+        }
+        $files = scandir($path);
+        $zip = new ZipStream($dirname.'.zip');
+        foreach ($files as $file) {
+            if ($file != '.' && $file != '..') {
+                $zip->addFile($file, file_get_contents($path . DS . $file));
+            }
+        }
+        $zip->finish();
+    }
+
+    public function bindManage(Request $request)
+    {
+        return $this->model->bindManage($request->param());
+    }
+
 }

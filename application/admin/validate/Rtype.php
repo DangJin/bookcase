@@ -23,6 +23,6 @@ class Rtype extends Validate
     ];
 
     protected $scene = [
-        'update' => [''],
+        'update' => ['name'],
     ];
 }

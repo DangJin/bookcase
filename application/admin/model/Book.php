@@ -37,9 +37,9 @@ class Book extends Common
             return returnJson(602, 400, '折扣按百分比计算且折扣区间为[1,100]');
         }
         $data['buyout'] = (int)$data['price'] * (int)$data['sacle'];
-
-//        $data['create_user'] = session('sId');
-//        $data['modify_user'] = session('sId');
+        $data['price'] = 100 * $data['price'];
+        $data['create_user'] = session('sId');
+        $data['modify_user'] = session('sId');
 
         $this->startTrans();
         try {
@@ -78,12 +78,15 @@ class Book extends Common
             return returnJson(602, 400, '数量为整数且不超过1000');
         }
 
-        $book = $this->where('id', $data['id'])->field('title,author,press')->find();
+        $book = $this->where('id', $data['id'])->field('title,author,press,id,inventory')->find();
         if (is_null($book)) {
             return returnJson(602, 400, '没有此书');
         }
-
+        $book->inventory += $data['num'];
+        $book->isUpdate(true)->save();
+        
         $tmpData = [
+            'pid' => $book->getAttr('id'),
             'name' => $book->getAttr('title'),
             'author' => $book->getAttr('author'),
             'press' => $book->getAttr('press')
@@ -92,7 +95,8 @@ class Book extends Common
         $result = $books->insertAll($this->createBooks($tmpData, (int)$data['num']));
         if (false === $result)
             return returnJson(603, 400, $books->getError());
-        return returnJson(702, 200, '添加成功');
+
+        return returnJson(702, 200, $book->toArray());
     }
 
     private function createBooks($data, $num)
@@ -202,4 +206,74 @@ class Book extends Common
         return returnJson('702', '200', $result);
     }
 
+    public function del($data, $softdel = true)
+    {
+        if (!isset($data['ids']) && empty($data['ids'])) {
+            return returnJson(604, 400, '缺少删除参数');
+        }
+
+        $arr = explode(',', $data['ids']);
+        $arr = array_filter($arr);
+        $arr = array_unique($arr);
+
+        foreach ($arr as $item) {
+            $count = $this->table('books')->where('pid', $item)->count();
+            if ($count > 0)
+                return returnJson(610, 400, '此书库存不为0, 不能删除');
+        }
+
+        $this->where('id', 'in', $data['ids'])->delete();
+
+        return returnJson(703, 200, '删除成功');
+    }
+
+    public function getinfo($data)
+    {
+        if (empty($data['id']))
+            return returnJson(607, 200, '缺少id参数');
+        $result = [];
+        $result['buyed'] = $this->table('books')->where('pid', $data['id'])->where('state', 4)->count();
+        $result['broken'] = $this->table('books')->where('pid', $data['id'])->where('state', 3)->count();
+        $result['borrow'] = $this->table('books')->where('pid', $data['id'])->where('state', 2)->count();
+        $result['normal'] = $this->table('books')->where('pid', $data['id'])->where('state', 1)->count();
+
+        return returnJson(701, 200, $result);
+    }
+
+    public function renew($data) {
+        if (!isset($data['id']) && empty($data['id'])) {
+            return returnJson(605, 400, '更新缺少主键参数');
+        }
+
+        $data['modify_user'] = session('id');
+
+        if (isset($data['price']))
+            $data['price'] = str_replace('.', '', $data['price']);
+
+        if (isset($data['buyout']))
+            $data['buyout'] = str_replace('.', '', $data['buyout']);
+
+        $this->startTrans();
+        try {
+            $result = $this->allowField($this->upallow)->validate($this->name.'.update')->isUpdate(true)->save($data);
+            if ($result === false) {
+                return returnJson(606, 400, $this->getError());
+            }
+            foreach (array_keys($data) as $item) {
+                if (in_array($item, array_keys($this->manyToMany))) {
+                    $tmparr = explode(',', $this->manyToMany[$item]);
+                    $this->table($tmparr[0])->where($tmparr[1], $data['id'])->delete();
+                    $tmparr = explode(',', $data[$item]);
+                    $tmparr = array_unique($tmparr);
+                    $tmparr = array_filter($tmparr);
+                    $this->$item()->savaAll($tmparr);
+                }
+            }
+            $this->commit();
+        } catch (Exception $e) {
+            $this->rollback();
+            return returnJson(606, 400, $e->getMessage());
+        }
+        return returnJson(704, 200, '更新成功');
+    }
 }

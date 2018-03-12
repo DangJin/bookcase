@@ -26,7 +26,7 @@
         "topthink/think-oracle": "1.*",
         "overtrue/wechat": "^4.0",
         "firebase/php-jwt": "^5.0",
-        "maennchen/zipstream-php": "^0.5.1",
+        "maennchen/zipstream-php": "^0.5.2",
         "Vaptcha/vaptcha-sdk": "^1.1",
         "endroid/qr-code": "^2.5",
         "overtrue/easy-sms": "^1.0",

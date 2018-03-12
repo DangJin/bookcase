@@ -20,4 +20,6 @@ class Area extends Common
         parent::__construct($request);
         $this->model = new \app\admin\model\Area();
     }
+
+
 }

@@ -36,11 +36,23 @@ class Config extends Common
      */
     public function getPayNum()
     {
-        $data = $this->field('body')->where('type', 'PAYCONFIG')->find();
+        $data = $this->field('id,body')->where('type', 'RECHARGE')->select();
         if ( ! empty($data)) {
-            return $data->getAttr('body');
+            return returnJson(888, 200, $data);
         }
 
         return false;
     }
+
+    public function getDeposit()
+    {
+        $data = $this->field('id,body')->where('type', 'DEPOSIT')->select();
+        if ( ! empty($data)) {
+            return returnJson(888, 200, $data);
+        }
+
+        return false;
+    }
+
+
 }

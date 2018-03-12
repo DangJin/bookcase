@@ -106,6 +106,7 @@ class Common extends Model
             }
         }
 
+        $result = $result->where('isdel', '<>', '1');
 
         try {
             //查询全部数据（不分页）
@@ -128,7 +129,7 @@ class Common extends Model
                         if (sizeof($tmp) == 1) {
                             $tmp[1] = '';
                         }
-                        $item[$tmp[0]] = $this->table($k)->where('id', $item[$tmp[0]])->where('isdel', '<>', 1)->field($tmp[1])->find();
+                        $item[$tmp[0]] = $this->table($k)->where('id', $item[$tmp[0]])->field($tmp[1])->find();
                     }
                 }
             }
@@ -177,7 +178,7 @@ class Common extends Model
         $this->startTrans();
         try {
             //添加主表
-            $result = $this->validate(true)->allowField($this->addallow)->validate(true)->save($data);
+            $result = $this->validate(true)->allowField($this->addallow)->save($data);
             if ($result == false)
                 return returnJson(603, 400, $this->getError());
             //添加关联中间表
@@ -203,7 +204,7 @@ class Common extends Model
     }
 
     public function renew($data) {
-        if (!isset($data['id']) && empty($data['id'])) {
+        if (empty($data['id'])) {
             return returnJson(605, 400, '更新缺少主键参数');
         }
 
@@ -234,7 +235,7 @@ class Common extends Model
 
     public function del($data, $softdel = true)
     {
-        if (!isset($data['ids']) && empty($data['ids'])) {
+        if (empty($data['ids'])) {
             return returnJson(604, 400, '缺少删除参数');
         }
         if ($softdel) {

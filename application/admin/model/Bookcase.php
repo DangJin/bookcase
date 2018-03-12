@@ -9,7 +9,10 @@
 namespace app\admin\model;
 
 
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\QrCode;
 use think\Db;
+use ZipStream\ZipStream;
 
 class Bookcase extends Common
 {
@@ -18,16 +21,19 @@ class Bookcase extends Common
         'drawer' => 'pid'
     ];
 
+    protected $parent = [
+        'area' => 'area',
+        'user' => 'uid|id,name'
+    ];
+
     public function add($data)
     {
         if (empty($data)) {
             return returnJson(602, 400, '添加参数不能为空');
         }
 
-        if (empty($data['num'])) {
-            return returnJson(602, 400, '抽屉数量不能为空');
-        } elseif (!is_numeric($data['num'])) {
-            return returnJson(602, 400, '抽屉数为整数');
+        if (empty($data['norms'])) {
+            return returnJson(602, 400, '抽屉规格不能为空');
         }
 
         $data['create_user'] = session('id');
@@ -40,7 +46,9 @@ class Bookcase extends Common
             $result = $this->validate(true)->allowField($this->addallow)->validate(true)->save($data);
             if ($result == false)
                 return returnJson(603, 400, $this->getError());
-            $this->table('drawer')->insertAll($this->createBooks(['pid' => $this->getAttr('id')], (int)$data['num']));
+            $drawer = $this->createDrawers(['pid' => $this->getAttr('id')], $data['norms']);
+            $this->table('drawer')->insertAll($drawer);
+            $this->createQrcodes($data['number'], $drawer);
             $this->commit();
         } catch (\Exception $e) {
             $this->rollback();
@@ -52,20 +60,25 @@ class Bookcase extends Common
         return returnJson(702, 200, $this->toArray());
     }
 
-    private function createBooks($data, $num)
+    private function createDrawers($data, $norms)
     {
         $drawer = [];
         $no = 'dra';
         $time = strtotime('now');
         $date = date('Y-m-d H:i:s', $time);
-        for ($i = 0; $i < $num; $i++) {
-            $tmp = $data;
-            $tmp['number'] = $no.$time.$this->num2str($i, 3);
-            $tmp['create_user'] = session('id');
-            $tmp['modify_user'] = session('id');
-            $tmp['create_time'] = $date;
-            $tmp['modify_time'] = $date;
-            array_push($drawer, $tmp);
+        $norms = explode(',', $norms);
+        for ($i = 1; $i <= $norms[0]; $i++) {
+            for ($j = 1; $j <= $norms[1]; $j++) {
+                $tmp = $data;
+                $tmp['row'] = $i;
+                $tmp['col'] = $j;
+                $tmp['number'] = $no.$time.$this->num2str($i, 3);
+                $tmp['create_user'] = session('id');
+                $tmp['modify_user'] = session('id');
+                $tmp['create_time'] = $date;
+                $tmp['modify_time'] = $date;
+                array_push($drawer, $tmp);
+            }
         }
         return $drawer;
     }
@@ -104,6 +117,14 @@ class Bookcase extends Common
 
             $result = $this->where('area', $area->getAttr('id'))
                 ->paginate($limit, false, ['page' => $page]);
+            $result = $result->toArray();
+            if (!empty($result['data'])) {
+                foreach ($result['data'] as &$item) {
+                    $item['area'] = $this->table('area')->where('id', $item['area'])->find();
+                    $item['uid'] = $this->table('user')->where('id', $item['uid'])->field('id,name')->find();
+                }
+            }
+
 
             return returnJson(701, 200, $result);
         }
@@ -152,5 +173,87 @@ class Bookcase extends Common
             return returnJson(701, 200, $info);
         elseif ($returnType == 2)
             return $info;
+    }
+
+    protected function createQrcodes($dirname, $data)
+    {
+        $path = ROOT_PATH . 'public' . DS . 'uploads' . DS . $dirname;
+        if (!is_dir($path)) {
+            mkdir($path, 0777, true);
+            $this->createQrcode($dirname, $dirname, $path);
+            foreach ($data as $item) {
+                $this->createQrcode($item['number'], $item['number'], $path);
+            }
+        } else {
+            throw Exception('此二维码文件夹已经存在');
+        }
+    }
+
+    protected function createQrcode($message, $filename, $path)
+    {
+        $qrcode = new QrCode($message);
+        $qrcode->setLogoPath(ROOT_PATH . 'public' . DS . 'logo.png');
+        $qrcode->setLogoWidth(60);
+        $qrcode->setErrorCorrectionLevel(ErrorCorrectionLevel::QUARTILE);
+        $qrcode->writeFile($path. DS . $filename .'.png');
+    }
+
+    public function del($data, $softdel = true)
+    {
+        if (!isset($data['ids']) && empty($data['ids'])) {
+            return returnJson(604, 400, '缺少删除参数');
+        }
+
+        $arr = explode(',', $data['ids']);
+        $arr = array_filter($arr);
+        $arr = array_unique($arr);
+
+        foreach ($arr as $item) {
+            $count = $this->table('drawer')->where('pid', $item)->count();
+            if ($count > 0)
+                return returnJson(610, 400, '此书柜抽屉不为0, 不能删除');
+        }
+
+        foreach ($arr as $item) {
+            $bc = Bookcase::get($item);
+            if (!is_null($bc)) {
+                $img = BcImg::get($bc->getAttr('imgid'));
+                if (!is_null($img)) {
+                    unlink($img->getAttr('path'));
+                    $img->delete();
+                }
+            }
+        }
+
+        $this->where('id', 'in', $data['ids'])->delete();
+
+        return returnJson(703, 200, '删除成功');
+    }
+
+    public function bindManage($data)
+    {
+        if (empty($data['phone'])) {
+            return returnJson(608, 400, '手机号不能为空');
+        }
+
+        if (empty($data['id'])) {
+            return returnJson(608, 400, '书柜ID不能为空');
+        }
+
+        $user = $this->table('user')->where('phone', $data['phone'])->where('type', 3)->field('name, phone, id')->find();
+
+        if (is_null($user))
+            return returnJson(608, 400, '没有这位管理员');
+
+        $result = $this->update([
+            'id' => $data['id'],
+            'uid' => $user->getAttr('id')
+        ]);
+
+        if ($result === false) {
+            return returnJson(606, 400, '绑定失败');
+        }
+
+        return returnJson(704, 200, $user);
     }
 }

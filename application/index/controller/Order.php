@@ -34,5 +34,9 @@ class Order extends Common
         return returnJson(200, 200, explode(',', $data));
     }
 
+    public function createOrder(Request $request)
+    {
+        return $this->order->createOrder($request->param());
+    }
 
 }
