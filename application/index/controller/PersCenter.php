@@ -51,8 +51,8 @@ class PersCenter extends Common
      */
     public function myBalance()
     {
-        //        $user_id = Session::get('user_id');
-        $user_id = 4;
+        $user_id = Session::get('user_id');
+//        $user_id = 4;
         $data    = Db::table('user')->where('id', $user_id)
             ->field('handsel,money')->find();
 
@@ -77,8 +77,8 @@ class PersCenter extends Common
      */
     public function myReadCoin()
     {
-        //        $user_id = Session::get('user_id');
-        $user_id = 4;
+        $user_id = Session::get('user_id');
+//        $user_id = 4;
         $data    = Db::table('user')->where('id', $user_id)->field('coin')
             ->find();
 
@@ -95,8 +95,8 @@ class PersCenter extends Common
      */
     public function myDeposit()
     {
-        //        $user_id = Session::get('user_id');
-        $user_id = 4;
+        $user_id = Session::get('user_id');
+//        $user_id = 4;
         $data    = Db::table('user')->where('id', $user_id)->field('deposit')
             ->find();
 
@@ -113,8 +113,8 @@ class PersCenter extends Common
      */
     public function myReadCard()
     {
-        //        $user_id = Session::get('user_id');
-        $user_id = 4;
+        $user_id = Session::get('user_id');
+//        $user_id = 4;
         $data    = Db::table('user')->where('id', $user_id)->field('coin')
             ->find();
 
@@ -133,7 +133,7 @@ class PersCenter extends Common
      */
     public function myWish(Request $request)
     {
-        //        $user_id = $request->param('user_id');
+        $user_id = $request->param('user_id');
         $page    = $request->param('page', 1);
         $limit   = $request->param('limit', 10);
         //        if (empty($user_id)) {
@@ -192,8 +192,8 @@ class PersCenter extends Common
      */
     public function myBuyout()
     {
-        //        $user_id = Session::get('user_id');
-        $user_id = 2;
+        $user_id = Session::get('user_id');
+//        $user_id = 2;
 
         $order = new Order();
         $data  = $order->bought($user_id);
