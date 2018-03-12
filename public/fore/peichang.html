@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>损坏赔偿</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="css/bootstrap.3.3.7min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/animate.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script data-main="scripts/peichang" src="js/require.js"></script>
+</head>
+<body>
+<div class="peiChang">
+    <div class="book">
+    </div>
+    <script type="text/html" id="book">
+        <img src="{{data.cover}}" alt="">
+        <div class="content">
+            <h5>{{data.title}}</h5>
+            <span>租借时间：{{data.time}}</span>
+        </div>
+        <p>总费用 <span>{{data.data.total/100}}元</span></p>
+        <ul>
+            <li><span>租借费用</span><span>{{data.data.zujin/100}}元</span></li>
+            <li><span>赔偿费用：</span><span>{{data.data.sunhuai/100}}元</span></li>
+        </ul>
+    </script>
+    <div class="operation">
+        <a id="pay">支付</a>
+    </div>
+</div>
+</body>
+</html>

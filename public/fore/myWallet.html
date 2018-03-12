@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>我的钱包</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="css/bootstrap.3.3.7min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/animate.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script data-main="scripts/myWallet" src="js/require.js"></script>
+</head>
+<body>
+<div class="myWallet">
+</div>
+<script type="text/html" id="myWallet">
+    <div class="top">
+        <img src="https://dummyimage.com/16:9x320&text=XXXX" alt="">
+        <a href="myWalletM.html">明细</a>
+        <div><h5>购买月卡</h5><a href="myVipCard.html">购买</a><span>阅读更划算!</span></div>
+    </div>
+    <div class="content">
+        <div class="money">
+            <h5>余额</h5>
+            <p>12.00</p>
+        </div>
+        <ul>
+            <li>
+                <a href="recharge.html">
+                    <h5>充值</h5>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+            <li>
+                <a href="tixian.html">
+                    <h5>提现</h5>
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <!--<div class="yajin">-->
+        <!--<h5>未缴纳押金,无法享受借阅服务</h5>-->
+        <!--<a href="myDeposit.html">立即缴纳</a>-->
+    <!--</div>-->
+    <div class="yajin active">
+        <h5>已缴纳押金,可享受图书借阅服务</h5>
+        <a href="myDeposit.html">查看</a>
+    </div>
+</script>
+</body>
+</html>

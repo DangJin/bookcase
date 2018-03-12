@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>图书详情</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="css/bootstrap.3.3.7min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/animate.css">
+    <link rel="stylesheet" href="css/toast.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script data-main="scripts/productM" src="js/require.js"></script>
+</head>
+<body>
+<div class="productM">
+</div>
+<script type="text/html" id="productM">
+    <div class="productM_top">
+        <img src="{{data.cover}}" alt="">
+        <div class="content">
+            <h5>{{data.title}}</h5>
+            <div class="score">
+                <ul>
+                    <li class="active"></li>
+                    <li class="active"></li>
+                    <li class="active"></li>
+                    <li></li>
+                    <li></li>
+                </ul>
+                <span>9.1</span>
+                <p>(67人评分)</p>
+            </div>
+            <span>作者：{{data.author}}</span>
+            <span>出版社：{{data.press}}</span>
+            <p><span>定价：<strong>13</strong></span><span>买断：<strong>26</strong></span></p>
+        </div>
+        <div class="text">
+            <p>{{data.details}}</p>
+            <a href="javascript:void(0)">更多</a>
+        </div>
+        <div class="productM_a">
+            <a href="articleList.html?bid={{data.id}}">
+                <img src="image/mulu.png" alt="">
+                <span>目录</span>
+            </a>
+            <a href="comment.html?bid={{data.id}}">
+                <img src="image/pinglun.png" alt="">
+                <span>点评</span>
+            </a>
+            <a class="{{data.state == 1? 'active' : ''}}">
+                <img src="image/card.png" alt="">
+                <span>借</span>
+            </a>
+        </div>
+    </div>
+    <div class="productM_list">
+        <ul>
+            {{each data.comments}}
+            <li>
+                <div class="title">
+                    <img src="image/head.jpg" alt="">
+                    <h5>{{$value.uname}}</h5>
+                </div>
+                <ul>
+                    <li class="active"></li>
+                    <li class="active"></li>
+                    <li class="active"></li>
+                    <li></li>
+                    <li></li>
+                </ul>
+                <p>{{$value.body}}</p>
+            </li>
+            {{/each}}
+        </ul>
+    </div>
+    <div class="productM_bottom">
+        <a>加入心愿单</a>
+        <a href="order.html?bid={{data.id}}">立即购买</a>
+    </div>
+</script>
+</body>
+</html>

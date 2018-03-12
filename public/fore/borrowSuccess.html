@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>借书成功</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="css/bootstrap.3.3.7min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/animate.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="borrowSuccess">
+    <p>假装我是一大串开柜规则和温馨提示假装我是一大串开柜规则和温馨提示假装我是一大串开柜规则和温馨提示假装我是一大串开柜规则和温馨提示！</p>
+    <a>开启柜门</a>
+</div>
+</body>
+<script src="js/jquery.2.1.1min.js"></script>
+<script>
+  $(document).ready(function () {
+
+    console.log(JSON.parse(localStorage.getItem('Param')))
+    var Param = JSON.parse(localStorage.getItem('Param'))
+    var object = {
+      'type': 'control',
+//      'id': num2string(8, parseInt(Param.id)),
+      id: '01020304',
+      'row': num2string(2, parseInt(Param.row)),
+      'col': num2string(2, parseInt(Param.col))
+    }
+    console.log(object)
+    var ws = new WebSocket('ws://39.104.76.182:8383')
+    ws.onopen = function () {
+      ws.send(JSON.stringify(object))
+    }
+    ws.onmessage = function (evt) {
+      console.log(evt.data)
+      alert('数据已接收...')
+    }
+
+  })
+
+  function num2string (num, str) {
+    str = str.toString(16)
+    if (num < str.length) {
+      return str
+    }
+    num = num - str.length
+    for (var i = 0; i < num; i++) {
+      str = '0' + str
+    }
+    return str
+  }
+</script>
+</html>

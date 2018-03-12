@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>柜子详情</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="css/bootstrap.3.3.7min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/animate.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script data-main="scripts/guiziM" src="js/require.js"></script>
+</head>
+<body>
+<div class="guiziM"></div>
+<script type="text/html" id="guiziM">
+
+    <div class="top">
+        <div class="top_img"><img src="image/bg-m.png" alt=""></div>
+        <div class="content">
+            <img src="{{data.cover}}" alt="">
+            <div class="text">
+                <h5>{{data.name}}</h5>
+                <p>地址：{{data.address}}</p>
+            </div>
+        </div>
+    </div>
+    <div class="list">
+        <ul>
+            {{each data.drawers}}
+            <li>
+                <a data-bid="{{$value.bId}}" data-books_id="{{$value.books_id}}" data-row="{{$value.row}}"
+                   data-col="{{$value.col}}">
+                    <img src="{{$value.cover}}" alt="{{$value.title}}">
+                    <div class="content">
+                        <h5>{{$value.title}}</h5>
+                        <span>{{$value.drawerNo}}</span>
+                        <p>{{$value.details}}</p>
+                        <div><span>{{$value.author}}</span><span>{{$value.type}}</span></div>
+                    </div>
+                </a>
+            </li>
+            {{/each}}
+        </ul>
+    </div>
+</script>
+</body>
+</html>

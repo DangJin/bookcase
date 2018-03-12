@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>损坏程度</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="css/bootstrap.3.3.7min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/animate.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script data-main="scripts/selectDamage" src="js/require.js"></script>
+</head>
+<body>
+<div class="peiChang">
+    <div class="book">
+    </div>
+    <script type="text/html" id="book">
+        <img src="{{data.cover}}" alt="">
+        <div class="content">
+            <h5>{{data.title}}</h5>
+            <span>租借时间：<c>{{if data.data.day !== 0}}{{data.data.day}}天{{/if}}{{if data.data.hour !== 0}}{{data.data.hour}}小时{{/if}}</c></span>
+        </div>
+        <div class="damage">
+            <h5>损坏程度</h5>
+            <select>
+                <option value="" data-id="-1">完好无损</option>
+                {{each data.data.damage}}
+                <option value="" data-id="{{$value.id}}">{{$value.title}}</option>
+                {{/each}}
+            </select>
+        </div>
+    </script>
+    <div class="operation">
+        <a>下一步</a>
+    </div>
+</div>
+</body>
+</html>

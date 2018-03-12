@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>我的心愿单</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="css/bootstrap.3.3.7min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/animate.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script data-main="scripts/myWantList" src="js/require.js"></script>
+</head>
+<body>
+<div class="myWantList">
+    <div class="title">
+        <a href="">心愿单说明 ></a>
+    </div>
+    <div class="list">
+    </div>
+    <script type="text/html" id="list">
+        <ul>
+            {{each data}}
+            <li>
+                <a href="productM.html?bid={{$value.bId}}">
+                    <img src="{{$value.cover}}" alt="{{$value.title}}">
+                    <div class="content">
+                        <h5>{{$value.title}}</h5>
+                        <p>作为一种便捷地收集网上信息并从中抽取出可用信息的方式，网络爬虫技术变得越来越有用。使用Python这样的简单编程语言，你可以使用少量编程技能就可以爬取复杂的网站。\n《用Python写网络爬虫》作为使用Python来爬取网络数据的杰出指南，讲解了从静态页面爬取数据的方法以及使用缓存来管理服务器负载的方法。此外，本书还介绍了如何使用AJAX URL和Firebug扩展来爬取数据，以及有关爬取技术的更多真相，比如使用浏览器渲染、管理cookie、通过提交表单从受验证码保护的复杂网站中抽取数据等。本书使用Scrapy创建了一个高级网络爬虫，并对一些真实的网站进行了爬取。\n《用Python写网络爬虫》介绍了如下内容：\n通过跟踪链接来爬取网站；\n使用lxml从页面中抽取数据；\n构建线程爬虫来并行爬取页面；\n将下载的内容进行缓存，以降低带宽消耗；\n解析依赖于JavaScript的网站；\n与表单和会话进行交互；\n解决受保护页面的验证码问题；\n对AJAX调用进行逆向工程；\n使用Scrapy创建高级爬虫。\n本书读者对象\n本书是为想要构建可靠的数据爬取解决方案的开发人员写作的，本书假定读者具有一定的Python编程经验。当然，具备其他编程语言开发经验的读者也可以阅读本书，并理解书中涉及的概念和原理。</p>
+                        <div><span>{{$value.author}}</span><span>网络科技</span></div>
+                    </div>
+                </a>
+            </li>
+            {{/each}}
+        </ul>
+    </script>
+</div>
+</body>
+</html>
