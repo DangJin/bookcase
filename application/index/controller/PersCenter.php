@@ -21,22 +21,23 @@ class PersCenter extends Common
      */
     public function myBorrow(Request $request)
     {
-        $user_id = 1;
-        //        $user_id = $request->param('user_id');
+        $user_id = $request->param('user_id');
         $state = $request->param('type');
         $page  = $request->param('page', 1);
         $limit = $request->param('limit', 10);
         if (empty($user_id) || empty($state)) {
             return returnJson(400, 400, '必需参数不能为空');
         }
-        $buyout = Db::table('borrow')->where('borrow.create_user', $user_id)
+//        dump($request->param());
+        $buyout = Db::table('borrow')->where('borrow.uid', $user_id)
             ->where(
                 'borrow.state', $state
             )->join(
-                'books bs', 'borrow.bid=bs.id'
-            )->join('book b', 'bs.pid=b.id')->field(
-                'b.id,b.title,b.press,b.author,b.cover'
-            )->page($page, $limit)->select();
+                'books bs', 'borrow.bid=bs.id', 'LEFT'
+            )->join('book b', 'bs.pid=b.id', 'LEFT')->field(
+                'bs.id books_id,b.title,b.press,b.author,b.cover,borrow.id borrow_id'
+            )
+            ->page($page, $limit)->select();
 
         return returnJson(200, 200, $buyout);
     }
@@ -133,7 +134,6 @@ class PersCenter extends Common
     public function myWish(Request $request)
     {
         //        $user_id = $request->param('user_id');
-        $user_id = 4;
         $page    = $request->param('page', 1);
         $limit   = $request->param('limit', 10);
         //        if (empty($user_id)) {
@@ -160,10 +160,10 @@ class PersCenter extends Common
      */
     public function userProfile(Request $request)
     {
-        //        $user_id = Session::get('user_id');
-        //                $user_id = 23;
         $user_id = $request->param("uid");
-        $sign    = new \app\index\model\Sign();
+        //        $user_id = 4;
+
+        $sign = new \app\index\model\Sign();
         // 判断是否是连续签到
         if ( ! $sign->lastIsSign($user_id)) {
             // 设置为 0

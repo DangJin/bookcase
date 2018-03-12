@@ -9,6 +9,7 @@
 namespace app\wechat\controller;
 
 
+use think\Log;
 use think\Request;
 
 class Menu extends Common
@@ -35,8 +36,7 @@ class Menu extends Common
     public function addMenu(Request $request)
     {
         $menu = $request->param("menus");
-
-        $res = $this->app->menu->create($menu);
+        $res  = $this->app->menu->create(json_decode($menu, true));
 
         return returnJson(200, 200, $res);
     }
