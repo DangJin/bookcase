@@ -292,7 +292,7 @@ class Order extends Common
         $user = User::get($order->getAttr('uid'));
 
         if (is_null($user))
-            return returnJson(901, 400, '用户错误');
+            return ['code' => 901, 'status' => 400, 'msg' => '用户错误'];#returnJson(901, 400, '用户错误');
 
         $this->startTrans();
         try {

@@ -23,8 +23,16 @@ class Index extends Common
     {
         // 得到服务端应用实例
         $server = $this->app->server;
-        $server->push(TextHandler::class);
+//                $server->push(TextHandler::class);
+        $server->push(
+            function ($message) {
+                Log::info("消息回复");
+                Log::info($message);
+                return "你发一条消息";
+            }
+        );
         $response = $server->serve();
         $response->send();
+        return $response;
     }
 }
