@@ -2,7 +2,8 @@ require.config({
   paths: {
     "jquery": "../js/jquery.2.1.1min",
     "template": "../js/template-web",
-    "F": "../js/function"
+    "F": "../js/function",
+    'wx': '../js/jweixin'
   }
 });
 

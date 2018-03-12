@@ -4,6 +4,7 @@ require.config({
     'template': '../js/template-web',
     'F': '../js/function',
     'api': '../api/index',
+    'wx': '../js/jweixin',
     'bookCase': '../api/bookCase/index'
   }
 })
@@ -29,7 +30,7 @@ require(['jquery', 'F', 'bookCase'], function ($, F, bookCase) {
     bookCase.getArticleList(options, function (res) {
       console.log(res)
       F.display('articleList', res, function () {
-        $('.articleList_content>.mulu').html(res.catalog)
+        $('.articleList_content>.mulu_ul').html(res.catalog)
       })
     })
 

@@ -4,6 +4,7 @@ require.config({
     'template': '../js/template-web',
     'F': '../js/function',
     'api': '../api/index',
+    'wx': '../js/jweixin',
     'mine': '../api/mine/index'
   }
 })
@@ -27,10 +28,8 @@ require(['jquery', 'F', 'mine'], function ($, F, mine) {
 
     initDom()
 
-
-    $('.select>ul>li').click(function () {
-      options.type = $(this).data('value')
-      getMyBorrow()
+    F.wxLogin(function (data) {
+      getMyWantList()
     })
 
     function getMyWantList () {
@@ -41,7 +40,6 @@ require(['jquery', 'F', 'mine'], function ($, F, mine) {
     }
 
     function initDom () {
-      getMyWantList()
     }
 
   })

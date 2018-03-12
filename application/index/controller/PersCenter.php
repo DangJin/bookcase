@@ -134,7 +134,6 @@ class PersCenter extends Common
     public function myWish(Request $request)
     {
         //        $user_id = $request->param('user_id');
-        $user_id = 4;
         $page    = $request->param('page', 1);
         $limit   = $request->param('limit', 10);
         //        if (empty($user_id)) {
@@ -159,9 +158,9 @@ class PersCenter extends Common
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public function userProfile()
+    public function userProfile(Request $request)
     {
-        $user_id = Session::get('user_id');
+        $user_id = $request->param("uid");
         //        $user_id = 4;
 
         $sign = new \app\index\model\Sign();

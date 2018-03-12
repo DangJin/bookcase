@@ -43,11 +43,13 @@ class Oauth extends Controller
         if (Session::get('wx_user')) {
             return returnJson(200, 200, Session::get('wx_user'));
         }
-        $oauth = $this->app->oauth;
-        $user  = $oauth->user();
-        $uid   = $this->getUserId($user);
+        $oauth           = $this->app->oauth;
+        $user            = $oauth->user();
+        $uid             = $this->getUserId($user);
         $user_arr        = $user->toArray();
         $user_arr['uid'] = $uid;
+        // 写Session
+        Session::set("wx_user", $user_arr);
 
         return returnJson(200, 200, $user_arr);
     }
@@ -70,10 +72,13 @@ class Oauth extends Controller
                 return $_user['id'];
             } else {
                 $data = [
-                    'openid'  => $openid,
-                    'name'    => $user_arr['original']['nickname'],
-                    'headimg' => $user_arr['original']['headimgurl'],
-                    'gender'  => $user_arr['original']['sex'],
+                    'openid'      => $openid,
+                    'name'        => $user_arr['original']['nickname'],
+                    'headimg'     => $user_arr['original']['headimgurl'],
+                    'gender'      => $user_arr['original']['sex'],
+                    'type'        => 1,
+                    'create_time' => date("Y-m-d H:i:s", strtotime('now')),
+                    'modity_time' => date("Y-m-d H:i:s", strtotime('now')),
                 ];
 
                 $res = Db::table('user')->insert($data);
