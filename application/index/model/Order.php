@@ -376,7 +376,9 @@ class Order extends Common
 
         $this->startTrans();
         try {
+            $time = floor((strtotime('now')-strtotime($order->getAttr('create_time'))) / 3600);
             $user->inborrows = (int)$user->inborrows - 1;
+            $user->inborrows += $time;
             $user->isUpdate(true)->save();
 
             $drawer = $this->table('drawer')->where('bid', $order->getAttr('bid'))->where('state', 2)->find();
@@ -390,7 +392,6 @@ class Order extends Common
                 'state' => 1
             ]);
 
-            $time = floor((strtotime('now')-strtotime($order->getAttr('create_time'))) / 3600);
             $this->table('borrow')
                 ->where('uid', $order->getAttr('uid'))
                 ->where('bid', $order->getAttr('bid'))
